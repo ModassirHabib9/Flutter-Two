@@ -1,0 +1,101 @@
+name: we_coin
+description: A new Flutter project.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.4
+  get: any
+  flutter_screenutil: ^5.6.0
+  flutter_svg: ^1.1.6
+  flutter_svg_provider: ^1.0.3
+  dotted_border: ^2.0.0+3
+  line_chart: ^1.1.11
+  charts_flutter: ^0.11.0
+  quickalert: ^1.0.0
+  getwidget: ^3.0.1
+  #  flutter_chat_ui: ^1.6.6
+  device_info_plus: ^8.0.0
+  country_pickers: ^2.0.0
+  # Api Use
+  http: ^0.13.5
+  shared_preferences: ^2.0.15
+  dio: ^4.0.0
+  csc_picker: ^0.2.6
+  flutter_otp_text_field: ^1.1.0+2
+  network_handler: ^1.0.1
+  geolocator: any
+  dio_http_cache: ^0.3.0
+  avatar_view: ^1.0.1
+  hive: ^2.2.3
+
+
+  #  firebase_core: ^2.4.0
+  firebase_messaging: ^13.0.4
+
+  #"d595llNUS16ZVEr9CWy-7Z:APA91bH5Uol_un5ZoifV1MSRsR6OkhDTYOuzVBO_LREYiJN_4u7rZkXfwvMN1PqH8boc30tuPOQBOWFKU3jpCrp1LK8PvVuwRZc62Xw-9ISbOG4-Fmg9qiU796ZOBMThswQhHuOywewG"
+  image_cropper: ^2.0.3
+  image_picker: ^0.8.5+3
+  file_picker: ^5.2.2
+  mime: ^1.0.2
+  open_filex: ^4.3.1
+  path_provider: ^2.0.11
+  #  uuid: ^3.0.7
+  dropdown_button2: ^1.9.0
+  intl: ^0.17.0
+  json_annotation: any
+  anim_search_bar: ^2.0.3
+
+  syncfusion_flutter_charts: any
+
+dependency_overrides:
+  firebase_core_platform_interface: 4.5.1
+
+
+dev_dependencies:
+  json_serializable: any
+  build_runner: ^2.0.4
+  flutter_test:
+    sdk: flutter
+
+#  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/svg/

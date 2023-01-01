@@ -1,0 +1,127 @@
+{
+  "project_info": {
+    "project_number": "368326294108",
+    "firebase_url": "https://my-college-app-13ca4.firebaseio.com",
+    "project_id": "my-college-app-13ca4",
+    "storage_bucket": "my-college-app-13ca4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368326294108:android:ddbaddeb1c1ac0f2228499",
+        "android_client_info": {
+          "package_name": "com.example.we_coin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW2RTks8SDkNw0K1BSQTuJlmIvLFGHYug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368326294108:android:2c05b1bd45771c70228499",
+        "android_client_info": {
+          "package_name": "com.islamia.collegeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW2RTks8SDkNw0K1BSQTuJlmIvLFGHYug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368326294108:android:4a3c546976215786228499",
+        "android_client_info": {
+          "package_name": "com.rezuanulfahim.hasper_ebook_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW2RTks8SDkNw0K1BSQTuJlmIvLFGHYug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368326294108:android:5b0084572624639a228499",
+        "android_client_info": {
+          "package_name": "mudassir.onlline_mcqs_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW2RTks8SDkNw0K1BSQTuJlmIvLFGHYug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368326294108-0tqe9mltrkc7n26fcuq7p7rgbcsli931.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
