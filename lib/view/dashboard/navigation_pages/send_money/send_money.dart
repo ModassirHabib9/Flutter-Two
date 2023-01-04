@@ -123,7 +123,7 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
                                                 context,
                                                 listen: false);
                                         viewProfile.getUser1();
-                                        Get.to(SendMoney_2Screen());
+                                        Get.to(SendMoney_2Screen(coinName: userInfo.data![index].name));
                                       },
                                       child: Card(
                                           shape: RoundedRectangleBorder(

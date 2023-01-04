@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:we_coin/data/repositry/view_tickets_repo.dart';
 import 'package:we_coin/utils/api_constant.dart';
+import 'package:we_coin/view/dashboard/navigation_pages/tickets/tickets.dart';
 
 import 'auth_repo.dart';
 
@@ -47,11 +50,6 @@ class AddTickets_Provider extends ChangeNotifier {
 
     print("Response ${response.body}");
     print("Tickets Parms pass: ${priority+subject+message}");
-    /*showDialog(
-        context: context,
-        builder: (context) {
-          return Center(child: CircularProgressIndicator());
-        });*/
     Map<String, dynamic> data = jsonDecode(response.body);
     String success = data["status"].toString();
     if (success == "success") {

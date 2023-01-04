@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:we_coin/common_widget/my_custom_button.dart';
 import 'package:we_coin/common_widget/my_custom_textfield.dart';
@@ -63,17 +64,20 @@ class _EditProfilePageScreenState extends State<EditProfilePageScreen> {
     countryValue = widget.country.toString();
   }
 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loadData();
+
     print("Email${widget.phone!}");
   }
   File? _image;
 
   Future _pickImage(ImageSource source) async {
     try {
+      print("========>");
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
       File? img = File(image.path);
@@ -316,8 +320,8 @@ class _EditProfilePageScreenState extends State<EditProfilePageScreen> {
                                       mergin:
                                           EdgeInsets.symmetric(vertical: 20.h),
                                       onPressedbtn: () {
-                                        print("Image${_image}");
-                                        _sign_up.editeProfile(
+                                        print("Image${_image!.absolute}");
+                                        /*_sign_up.editeProfile(
                                             context,
                                             fullNameController.text,
                                             emailController.text,
@@ -327,8 +331,8 @@ class _EditProfilePageScreenState extends State<EditProfilePageScreen> {
                                             stateController.toString(),
                                             cityController.toString(),
                                             // provider.image.toString()
-                                            _image!.path
-                                        );
+                                            "${_image!.absolute}"
+                                        );*/
                                         _picUpdate(_image!.path);
                                       },
                                     )
@@ -389,16 +393,24 @@ class _EditProfilePageScreenState extends State<EditProfilePageScreen> {
   }
 
 }
-void _picUpdate(String image) async{
+void _picUpdate(String image) async {
   var headers = {
-    'authentication': '1___31aeaac265e2d74ea095fa3bb524f7fea905f586b10fb4b3c4ff445fea9babb31eff777b14336864'
+    'authentication': '805___5fe0d79ab7bb3a9a9ecf37b47a1f0f401a332c93320e4426afeebca419108c16787b4d1b49d6b8f8'
   };
-  var request = http.MultipartRequest('POST', Uri.parse('http://wecoin.pk/weCoinApp/api/enrollment/editProfile'));
-
-  request.files.add(http.MultipartFile.fromBytes('image', await File.fromUri(Uri.file(image)).readAsBytes()));
+  var request = http.MultipartRequest('POST',
+      Uri.parse('http://wecoin.pk/weCoinApp/api/enrollment/editProfile'));
+  request.fields.addAll({
+    'full_name': 'Khan lala',
+    'country': 'Dubai'
+  });
+  request.files.add(await http.MultipartFile.fromPath('image','$image'));
   request.headers.addAll(headers);
 
   http.StreamedResponse response = await request.send();
+
+  print(response.headers);
+  print(response);
+  print(response.request);
 
   if (response.statusCode == 200) {
     print(await response.stream.bytesToString());

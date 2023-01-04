@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:we_coin/utils/image_manager.dart';
 
 import '../../../../common_widget/my_custom_button.dart';
 import '../../../../common_widget/my_custom_textfield.dart';
@@ -12,7 +15,8 @@ import '../../../../data/repositry/send_money_repo.dart';
 import '../../../../utils/color_manager.dart';
 
 class SendMoney_2Screen extends StatefulWidget {
-  SendMoney_2Screen({Key? key}) : super(key: key);
+  SendMoney_2Screen({Key? key,this.coinName}) : super(key: key);
+  String? coinName;
 
   @override
   State<SendMoney_2Screen> createState() => _SendMoney_2ScreenState();
@@ -45,14 +49,30 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
   String? _selectedItem;
   final _formValidKey = GlobalKey<FormState>();
   String? accountNo;
+  String? account_balance;
 
   _StoreAccountNo() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     accountNo = sharedPreferences.getString('fromKey');
+    account_balance = sharedPreferences.getString('balance');
     print("Send Money $accountNo");
+    print("Send Balance $account_balance");
   }
 
+  bool visibilityTag = false;
+  bool visibilityObs = false;
+
+  void _changed(bool visibility, String field) {
+    setState(() {
+      if (field == "tag"){
+        visibilityTag = visibility;
+      }
+      if (field == "obs"){
+        visibilityObs = visibility;
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final sendMoney = Provider.of<SendMoney_Provider>(context);
@@ -83,7 +103,7 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                                   color: ColorsManager.WHITE_COLOR,
                                 ),
                               ),
-                              Text('Send Bitcoin',
+                              Text('Send ${widget.coinName}',
                                   style: TextStyle(
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.w600,
@@ -125,7 +145,20 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                                   child: DropdownButton(
                                     isExpanded: true,
                                     icon: Icon(Icons.expand_more),
-                                    hint: Text("BTC"),
+                                    hint: ListTile(
+                                      visualDensity: VisualDensity(
+                                          vertical: -4, horizontal: 0),
+                                      leading: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Image.asset(ImageManager.weCoin_logo,fit: BoxFit.cover,width: 30,height: 30),
+                                      ),
+                                      title: Text("WeCoin"),
+                                      trailing: Text(
+                                        "\$${"1000"}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
                                     value: selectedName,
                                     items: snapshot.data!.data!.map((location) {
                                       return DropdownMenuItem(
@@ -161,10 +194,19 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                                 ),
                               );
                             }
-                            return MyCustomTextField(
-                              controller: formController,
-                              hint: "BTC",
-                              suffixIcon: Icon(Icons.expand_more_outlined),
+                            return ListTile(
+                              visualDensity: VisualDensity(
+                                  vertical: -4, horizontal: 0),
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(ImageManager.weCoin_logo,fit: BoxFit.cover,width: 30,height: 30),
+                              ),
+                              title: Text("WeCoin"),
+                              trailing: Text(
+                                "\$${"1000"}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600),
+                              ),
                             );
                           }),
                     ),
@@ -265,7 +307,13 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                       // suffixIcon: Icon(Icons.expand_more_outlined),
                     ),
                     SizedBox(height: 20.h),
-                    SizedBox(height: 30, child: Text("To")),
+                    SizedBox(height: 30, child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("To"),
+                        MaterialButton(onPressed: (){ visibilityObs ? null : _changed(true, "obs");},child: Text("show balance"),)
+                      ],
+                    )),
                     MyCustomTextField(
                       controller: toController,
                       hint: "Paste scan or select destination",
@@ -277,7 +325,9 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                         return null;
                       },
                     ),
+                    visibilityObs ? Text("Total Balance: ${account_balance}"):Container(),
                     SizedBox(height: 20.h),
+
                     SizedBox(height: 30, child: Text("Amount")),
                     MyCustomTextField(
                       controller: amountController,
@@ -308,7 +358,7 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                     MyCustomTextField(
                       controller: networks_feeController,
                       hint: "Regular",
-                      suffixIcon: Icon(Icons.expand_more_outlined),
+
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Enter network fee!';
@@ -320,10 +370,30 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                       mergin: EdgeInsets.symmetric(vertical: 40.h),
                       onPressedbtn: () {
                         if (_formValidKey.currentState!.validate()) {
+                          // showAlertDialog(context);
+                          /*if(account_balance==null){
+                            print("successful${dropdownvalue}");
+                            try{
+                              sendMoney.sendMoney(
+                                  context,
+                                  dropdownvalue.toString(),
+                                  formController.text,
+                                  toController.text,
+                                  amountController.text,
+                                  notesController.text,
+                                  networks_feeController.text);
+                              return null;
+                            }
+                            catch(e){
+                              print(e.toString());
+                              print("successful");
+                            }
+
+                          }*/
                           print("successful");
                           sendMoney.sendMoney(
                               context,
-                              "6",
+                              dropdownvalue.toString(),
                               formController.text,
                               toController.text,
                               amountController.text,
@@ -332,6 +402,7 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                           return;
                         } else {
                           print("UnSuccessfull");
+                          print("===>${dropdownvalue.toString()}");
                         }
                       },
                       child: sendMoney.loading
@@ -349,4 +420,30 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
       ),
     );
   }
+  // showAlertDialog(BuildContext context) {
+  //   QuickAlert.show(
+  //       context: context,
+  //       type: QuickAlertType.warning,
+  //       cancelBtnText: "Cancel",
+  //       title: "Are You Sure",
+  //       text: "Are you sure to delete this",
+  //       confirmBtnText: "Confirm",
+  //       backgroundColor: Colors.transparent,
+  //       barrierColor: Colors.transparent,
+  //       showCancelBtn: true,
+  //       onCancelBtnTap: () {
+  //         Navigator.pop(context);
+  //       },
+  //       confirmBtnColor: ColorsManager.YELLOWBUTTON_COLOR,
+  //       onConfirmBtnTap: () async {
+  //         Provider.of<SendMoney_Provider>(context).sendMoney(
+  //             context,
+  //             dropdownvalue.toString(),
+  //             formController.text,
+  //             toController.text,
+  //             amountController.text,
+  //             notesController.text,
+  //             networks_feeController.text);
+  //       });
+  // }
 }

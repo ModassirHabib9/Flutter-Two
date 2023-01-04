@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:avatar_view/avatar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:we_coin/utils/image_manager.dart';
 
 import '../../../../data/model/view_profile_model.dart';
 import '../../../../data/repositry/view_profile_get.dart';
@@ -161,109 +163,125 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(
-                                                height: 18.h,
-                                                child: Text(
-                                                  "Default Wallet",
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY),
-                                                )),
-                                            SizedBox(
-                                                height: 30.h,
-                                                child: Text("3233 1599 3000 3221")),
-                                            SizedBox(
-                                                height: 18.h,
-                                                child: Text(
-                                                  "isVerified",
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY),
-                                                )),
-                                            SizedBox(
-                                              height: 30.h,
-                                              child: Text("Yes"),
+                                            Container(
+                                              height: 45,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0),),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.w),
+                                              alignment: Alignment.centerLeft,
+
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("Acount Verified"),
+                                                  Text(
+                                                    "Yes",
+                                                    style: TextStyle(
+                                                        fontSize: 12.sp,
+                                                        ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                            SizedBox(height: 18.h),
-                                            SizedBox(
-                                                height: 18.h,
-                                                child: Text(
-                                                  "State",
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY),
-                                                )),
-                                            SizedBox(
-                                                height: 30.h,
-                                                child: Text(
-                                                    "${userMap['data']['state']}" ==
-                                                            null
-                                                        ? "Kpk"
-                                                        : "${userMap['data']['state']}"
-                                                            .toString())),
-                                            SizedBox(
-                                                height: 18.h,
-                                                child: Text(
-                                                  "City",
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY),
-                                                )),
-                                            SizedBox(
-                                                height: 30.h,
-                                                child: Text(
-                                                    "${userMap['data']['city']}" ==
-                                                            null
-                                                        ? "Karak"
-                                                        : "${userMap['data']['city']}"
-                                                            .toString())),
-                                            SizedBox(
-                                                height: 18.h,
-                                                child: Text(
-                                                  "Country",
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY),
-                                                )),
-                                            SizedBox(
-                                                height: 30.h,
-                                                child: Text(
-                                                  "${userMap['data']['country']}",
-                                                )),
-                                            SizedBox(
-                                                height: 18.h,
-                                                child: Text(
-                                                  "Phone No#",
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY),
-                                                )),
-                                            SizedBox(
-                                                height: 30.h,
-                                                child: Text(
-                                                    "${userMap['data']['phone']}"
-                                                        .toString())),
-                                            SizedBox(
-                                                height: 18.h,
-                                                child: Text(
-                                                  "Time Zone",
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY),
-                                                )),
-                                            SizedBox(
-                                                height: 30.h,
-                                                child: Text("GMT")),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              height: 45,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0),),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.w),
+                                              alignment: Alignment.centerLeft,
+
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("State"),
+                                                  Text(
+                                                      "${userMap['data']['state']}" == null
+                                                          ? "Kpk"
+                                                          : "${userMap['data']['state']}")
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              height: 45,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0),),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.w),
+                                              alignment: Alignment.centerLeft,
+
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("City"),
+                                                  Text(
+                                                      "${userMap['data']['city']}" ==
+                                                          null
+                                                          ? "Karak"
+                                                          : "${userMap['data']['city']}"
+                                                          .toString())
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              height: 45,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0),),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.w),
+                                              alignment: Alignment.centerLeft,
+
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("Country"),
+                                                  Text(
+                                                    "${userMap['data']['country']}")
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              height: 45,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0),),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.w),
+                                              alignment: Alignment.centerLeft,
+
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("Phone"),
+                                                  Text(
+                                                      "${userMap['data']['phone']}")
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              height: 45,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0),),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.w),
+                                              alignment: Alignment.centerLeft,
+
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("Time Zone"),
+                                                  Text("GMT")
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         )),
-                                    Container(
+                                    /*Container(
                                       height: 45,
                                       width: double.infinity,
                                       padding: EdgeInsets.symmetric(
@@ -271,7 +289,7 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                       alignment: Alignment.centerLeft,
                                       color: ColorsManager.COLOR_GRAY,
                                       child: Text("Personal Details"),
-                                    ),
+                                    ),*/
                                     /// show two identity
                                     /*Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -335,7 +353,20 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                   shape: BoxShape.circle,
                                   color: Colors.grey[300],
                                 ),
-                                child: Container(
+                                child: AvatarView(
+                                    // radius: 24,
+                                    borderWidth: 2,
+                                    borderColor:
+                                    ColorsManager.YELLOWBUTTON_COLOR,
+                                    avatarType: AvatarType.CIRCLE,
+                                    imagePath:
+                                    ImageManager.user_pro,
+                                    placeHolder: Container(
+                                      child: Icon(
+                                        Icons.person,
+                                      ),
+                                    ),
+                                    errorWidget: CircularProgressIndicator()),/*Container(
                                   decoration: BoxDecoration(
                                       image: new DecorationImage(
                                         image: new NetworkImage(
@@ -348,7 +379,7 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                       ),
                                       borderRadius:
                                           BorderRadius.circular(50.0)),
-                                ))),
+                                )*/)),
                       ],
                     ),
                   ),

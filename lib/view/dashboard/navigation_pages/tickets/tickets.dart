@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:we_coin/common_widget/my_custom_textfield.dart';
 import 'package:we_coin/view/dashboard/navigation_pages/tickets/view_tickets.dart';
 
 import '../../../../data/repositry/view_tickets_repo.dart';
@@ -86,6 +88,20 @@ class _TicketsPageScreenState extends State<TicketsPageScreen> {
     print(view.viewTickets());
   }
   bool isChecked = false;
+   final TextEditingController controller = TextEditingController();
+  bool visibilityTag = false;
+  bool visibilityObs = false;
+
+  void _changed(bool visibility, String field) {
+    setState(() {
+      if (field == "tag"){
+        visibilityTag = visibility;
+      }
+      if (field == "obs"){
+        visibilityObs = visibility;
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     /* final viewTicket =
@@ -107,32 +123,45 @@ class _TicketsPageScreenState extends State<TicketsPageScreen> {
               child: Center(
                   child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 17.w),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () => Scaffold.of(context).openDrawer(),
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: ColorsManager.WHITE_COLOR,
-                              ),
-                            ),
-                            Text(
-                              'Tickets',
-                              style: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: ColorsManager.WHITE_COLOR),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Get.to(ForgotPasswordPageScreen());
-                              },
-                              child: Icon(Icons.search,
-                                  color: ColorsManager.WHITE_COLOR),
-                            )
-                          ])))),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: () => Scaffold.of(context).openDrawer(),
+                                  child: Icon(
+                                    Icons.arrow_back_ios,
+                                    color: ColorsManager.WHITE_COLOR,
+                                  ),
+                                ),
+                                Text(
+                                  'Tickets',
+                                  style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: ColorsManager.WHITE_COLOR),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    visibilityObs ? null : _changed(true, "obs");
+                                  },
+                                  child:  Icon(Icons.search,
+                                      color: ColorsManager.WHITE_COLOR)
+                                )
+                              ]),
+
+                        ],
+                      )))),
+          visibilityObs ? Padding(
+            padding: const EdgeInsets.only(top: 8.0,left: 12,right: 12),
+            child: MyCustomTextField(hint: "search...",suffixIcon: IconButton(onPressed: (){
+              _changed(false, "obs");
+            },icon: Icon(Icons.close),)),
+          ):Container(),
 
           Expanded(
               child: StreamBuilder(
@@ -154,16 +183,14 @@ class _TicketsPageScreenState extends State<TicketsPageScreen> {
                 // Get the data from the box
                 final users = box!.get('name');
                 final Map<String, dynamic> userMap = jsonDecode(users);
-
                 return Scrollbar(
                   child: RefreshIndicator(
                       onRefresh: _handleRefresh,
                       child: ListView.builder(
                         itemCount: userMap['data'].length,
                         itemBuilder: (context, index) {
-
                           return Container(
-                              margin: new EdgeInsets.fromLTRB(10, 20, 10, 0),
+                              margin: new EdgeInsets.fromLTRB(10, 0, 10, 0),
                               width: 25.0,
                               height: MediaQuery.of(context).size.height * 0.17,
                               child: Card(

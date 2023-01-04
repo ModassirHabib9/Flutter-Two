@@ -124,22 +124,22 @@ class CurrenciesProvider extends ChangeNotifier {
 
   ///// get transaction
   Future<TransactionModel?> viewTransaction() async {
-    String fileName = "getTransaction.json";
+    // String fileName = "getTransaction.json";
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     print("===> ge transaction token ${token}");
 
-    var dir = await getTemporaryDirectory();
+    // var dir = await getTemporaryDirectory();
 
-    File file = new File(dir.path + "/" + fileName);
-    if (file.existsSync()) {
-      print("Loading from cache");
-      var jsonData = file.readAsStringSync();
-      TransactionModel response =
-          TransactionModel.fromJson(json.decode(jsonData));
-      return response;
-    } else {
-      print("Loading from API");
+    // File file = new File(dir.path + "/" + fileName);
+    // if (file.existsSync()) {
+    //   print("Loading from cache");
+    //   var jsonData = file.readAsStringSync();
+    //   TransactionModel response =
+    //       TransactionModel.fromJson(json.decode(jsonData));
+    //   return response;
+    // } else {
+    //   print("Loading from API");
       var response = await http.get(
           Uri.parse(
             ApiConstants.BASE_URL + ApiConstants.GET_TRANSACTION,
@@ -148,15 +148,18 @@ class CurrenciesProvider extends ChangeNotifier {
             "authentication": "${token}",
           });
 
+      print("Transaction Response");
+      print(response.body);
+
       if (response.statusCode == 200) {
         var jsonResponse = response.body;
         TransactionModel res =
             TransactionModel.fromJson(json.decode(jsonResponse));
         //save json in local file
-        file.writeAsStringSync(jsonResponse, flush: true, mode: FileMode.write);
+        // file.writeAsStringSync(jsonResponse, flush: true, mode: FileMode.write);
 
         return res;
-      }
+      // }
     }
   }
 }

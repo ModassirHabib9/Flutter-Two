@@ -47,8 +47,9 @@ class EditProfile_Provider with ChangeNotifier {
           "country": country,
           "state": state,
           "city": city,
-          "image": "http://wecoin.pk/weCoinApp/uploads/${image}",
+          "image": image,
         });
+    setloading(false);
     print("===> Profile ${full_name + country + image}");
     print("====Response ${response}");
     setloading(false);

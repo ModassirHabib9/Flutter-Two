@@ -32,8 +32,11 @@ class ViewProfile_Provider extends ChangeNotifier {
       ViewProfileModel res =
           ViewProfileModel.fromJson(json.decode(jsonResponse));
       prefs.setString('fromKey', "${res.data!.wallets!.first.accountAddress}");
+      prefs.setString('balance2', "${res.data!.wallets!.first.balance}");
       final accountNo = prefs.getString('fromKey');
+      final balance = prefs.getString('balance2');
       print("accountNo  ${accountNo}");
+      print("balance2  ${balance}");
       notifyListeners();
       return res;
     }

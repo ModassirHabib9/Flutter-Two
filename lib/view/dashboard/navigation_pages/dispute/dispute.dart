@@ -11,6 +11,7 @@ import 'package:getwidget/types/gf_checkbox_type.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common_widget/my_custom_textfield.dart';
 import '../../../../data/model/view_dispute_model.dart';
 import '../../../../data/repositry/view_tickets_repo.dart';
 import '../../../../utils/color_manager.dart';
@@ -96,6 +97,19 @@ class _DisputedPageScreenState extends State<DisputedPageScreen> {
   }
 
   bool isChecked = false;
+  bool visibilityTag = false;
+  bool visibilityObs = false;
+
+  void _changed(bool visibility, String field) {
+    setState(() {
+      if (field == "tag"){
+        visibilityTag = visibility;
+      }
+      if (field == "obs"){
+        visibilityObs = visibility;
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final viewTicket =
@@ -138,12 +152,18 @@ class _DisputedPageScreenState extends State<DisputedPageScreen> {
                             ),
                             InkWell(
                               onTap: () {
-                                Get.to(ForgotPasswordPageScreen());
+                                visibilityObs ? null : _changed(true, "obs");
                               },
                               child: Icon(Icons.search,
                                   color: ColorsManager.WHITE_COLOR),
                             )
                           ])))),
+          visibilityObs ? Padding(
+            padding: const EdgeInsets.only(top: 8.0,left: 12,right: 12),
+            child: MyCustomTextField(hint: "search...",suffixIcon: IconButton(onPressed: (){
+              _changed(false, "obs");
+            },icon: Icon(Icons.close),)),
+          ):Container(),
           Expanded(
               child: StreamBuilder(
                 stream: _postsController!.stream,
