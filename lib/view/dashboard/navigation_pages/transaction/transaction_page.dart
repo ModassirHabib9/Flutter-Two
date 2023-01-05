@@ -109,22 +109,25 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
               child: FutureBuilder<TransactionModel?>(
                 future: transactionProvider.viewTransaction(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  print('Has error: ${snapshot.hasError}');
-                  print('Has data: ${snapshot.hasData}');
-                  print('Snapshot Data ${snapshot.data}');
-
                   if (snapshot.hasError) {
-                    return Text("");
+                    return Text("Error");
                   }
-
                   if (snapshot.hasData) {
                     TransactionModel? userInfo = snapshot.data;
+                  print(userInfo!.data!.transactions!.length);
+                  if(userInfo!.data!.transactions!.length==0){
+                    return Center(child: Center(
+                      child: Scrollbar(
+                        child:  Image.asset(ImageManager.noDataFound),
+                      ),
+                    ));
+                  }
                     return Column(
                       children: <Widget>[
                         Expanded(
                           child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: userInfo!.data!.transactions!.length,
+                              itemCount: userInfo.data!.transactions!.length,
                               itemBuilder: (BuildContext ctxt, int index) {
                                 return ListTile(
                                   leading: AvatarView(
@@ -199,7 +202,7 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                                             fontWeight: FontWeight.w600),
                                       ),
                                       Text(
-                                        "Completed",
+                                        userInfo.status!,
                                         style: TextStyle(
                                             color: ColorsManager.COLOR_GREEN),
                                       ),
@@ -214,7 +217,7 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
 
                   if (snapshot.connectionState != ConnectionState.done) {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: Text(""),
                     );
                   }
 
@@ -225,247 +228,8 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                   return Text("data");
                 },
               ),
-              /* FutureBuilder<ViewTicketModel?>(
-              future: viewTicket.viewTickets(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<ViewTicketModel?> snapshot,
-              ) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) {
-                    return const Text('Error');
-                  } else if (snapshot.hasData) {
-                    ViewTicketModel? userInfo = snapshot.data;
-                    print("Tickits=>${userInfo!.data!.first.id}");
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: userInfo.data!.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return Container(
-                              margin: new EdgeInsets.fromLTRB(10, 20, 10, 0),
-                              width: 25.0,
-                              height: MediaQuery.of(context).size.height * 0.17,
-                              child: Card(
-                                elevation: 7,
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0)),
-                                color: Colors.white,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      color: Colors.amber,
-                                      width: 5,
-                                    ),
-                                    SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          print('testing');
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 12, bottom: 12),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              new Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  new Text(
-                                                    'ID: 54545454',
-                                                  ),
-                                                  SizedBox(height: 30),
-                                                  Text("Open"),
-                                                ],
-                                              ),
-                                              Text(
-                                                snapshot
-                                                    .data!.data![index].subject
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              Container(
-                                                height: 20,
-                                                padding:
-                                                    EdgeInsets.only(top: 5),
-                                                child: Text(
-                                                  snapshot.data!.data![index]
-                                                      .priority
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: ColorsManager
-                                                          .COLOR_GRAY,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    snapshot.data!.data![index]
-                                                        .createdAt
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        fontSize: 12.sp,
-                                                        color: ColorsManager
-                                                            .APP_MAIN_COLOR,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {},
-                                                        // Get.to(ChatPage()),
-                                                        child: CircleAvatar(
-                                                            backgroundColor:
-                                                                ColorsManager
-                                                                    .COLOR_CONTAINER,
-                                                            radius: 16,
-                                                            child: Image.asset(
-                                                              ImageManager
-                                                                  .message_icon,
-                                                              height: 20,
-                                                            )),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      InkWell(
-                                                        onTap: () => Get.to(
-                                                            ViewTickitsScreen()),
-                                                        child: CircleAvatar(
-                                                            backgroundColor:
-                                                                ColorsManager
-                                                                    .COLOR_CONTAINER,
-                                                            radius: 16,
-                                                            child: Image.asset(
-                                                              ImageManager
-                                                                  .aye_icon,
-                                                              height: 20,
-                                                            )),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ));
-                        });
-                  } else {
-                    return const Text('Empty data');
-                  }
-                } else {
-                  return Text('State: ${snapshot.connectionState}');
-                }
-              },
-            ),*/
             ),
-            /*Expanded(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: FutureBuilder<TransactionModel?>(
-                  future: transactionProvider.viewTransaction(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      TransactionModel? userInfo = snapshot.data;
-                      print("${snapshot.data!.message}");
-                      print(
-                          "${userInfo!.data!.transactions!.first.email.toString()}");
-                      if (userInfo != null) {
-                        return ListTile(
-                          leading: AvatarView(
-                            radius: 24,
-                            borderWidth: 2,
-                            borderColor: ColorsManager.YELLOWBUTTON_COLOR,
-                            avatarType: AvatarType.CIRCLE,
-                            imagePath:
-                                "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?cs=srgb&dl=pexels-pixabay-415829.jpg",
-                            placeHolder: Container(
-                              child: Icon(
-                                Icons.person,
-                              ),
-                            ),
-                            errorWidget: Container(
-                              child: Icon(
-                                Icons.error,
-                                size: 50,
-                              ),
-                            ),
-                          ),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(_text2[index]),
-                              Text("Type",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: ColorsManager.COLOR_GRAY)),
-                              SizedBox(height: 10.h)
-                            ],
-                          ),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("12/02/22",
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: ColorsManager.COLOR_GRAY,
-                                  )),
-                              Text(_text3[index],
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: ColorsManager.COLOR_BLACK)),
-                              SizedBox(height: 10.h)
-                            ],
-                          ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "\$750.00",
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                              Text(
-                                "Completed",
-                                style:
-                                    TextStyle(color: ColorsManager.COLOR_GREEN),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
-                ),
-              ),
-            ),*/
+
           ],
         ),
       ),

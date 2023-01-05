@@ -10,9 +10,10 @@ import '../../data/repositry/view_profile_get.dart';
 import '../../utils/color_manager.dart';
 import '../../utils/image_manager.dart';
 import 'navigation_pages/profile/profile_page.dart';
-import 'navigation_pages/recived_money/recived_money.dart';
+
 import 'navigation_pages/send_money/send_money.dart';
 import 'navigation_pages/transaction/transaction_page.dart';
+import 'navigation_pages/wallats/wallat.dart';
 
 class DrawerItem {
   String? title;
@@ -71,6 +72,7 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         ViewProfileModel? userInfo = snapshot.data;
+
                         if (userInfo != null) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -102,8 +104,11 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
                       }
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          child: Image.asset(ImageManager.user_pro),
+                        child: InkWell(
+                          onTap: () => Get.to(ProfilePageScreen()),
+                          child: CircleAvatar(
+                            child: Image.asset(ImageManager.user_pro),
+                          ),
                         ),
                       );
                     },

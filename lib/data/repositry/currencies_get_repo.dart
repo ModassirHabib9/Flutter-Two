@@ -53,21 +53,21 @@ class CurrenciesProvider extends ChangeNotifier {
   }
 
   Future<WalletsModel?> getWallets() async {
-    String fileName = "getWallets.json";
+    // String fileName = "getWallets.json";
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     print("===> Profile ${token}");
 
-    var dir = await getTemporaryDirectory();
-
-    File file = new File(dir.path + "/" + fileName);
-    if (file.existsSync()) {
-      print("Loading from cache");
-      var jsonData = file.readAsStringSync();
-      WalletsModel response = WalletsModel.fromJson(json.decode(jsonData));
-      return response;
-    } else {
-      print("Loading from API");
+    // var dir = await getTemporaryDirectory();
+    //
+    // File file = new File(dir.path + "/" + fileName);
+    // if (file.existsSync()) {
+    //   print("Loading from cache");
+    //   var jsonData = file.readAsStringSync();
+    //   WalletsModel response = WalletsModel.fromJson(json.decode(jsonData));
+    //   return response;
+    // } else {
+    //   print("Loading from API");
       var response = await http.get(
           Uri.parse(
             ApiConstants.BASE_URL + ApiConstants.GET_WALLETS,
@@ -80,48 +80,12 @@ class CurrenciesProvider extends ChangeNotifier {
         var jsonResponse = response.body;
         WalletsModel res = WalletsModel.fromJson(json.decode(jsonResponse));
         //save json in local file
-        file.writeAsStringSync(jsonResponse, flush: true, mode: FileMode.write);
+        // file.writeAsStringSync(jsonResponse, flush: true, mode: FileMode.write);
 
         return res;
       }
-    }
+    // }
   }
-
-  Future<GetWalletModel?> viewWallets() async {
-    String fileName = "getWallets.json";
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-    print("===> getWallets token ${token}");
-
-    var dir = await getTemporaryDirectory();
-
-    File file = new File(dir.path + "/" + fileName);
-    if (file.existsSync()) {
-      print("Loading from cache");
-      var jsonData = file.readAsStringSync();
-      GetWalletModel response = GetWalletModel.fromJson(json.decode(jsonData));
-      return response;
-    } else {
-      print("Loading from API");
-      var response = await http.get(
-          Uri.parse(
-            ApiConstants.BASE_URL + ApiConstants.GET_WALLETS,
-          ),
-          headers: {
-            "authentication": "${token}",
-          });
-
-      if (response.statusCode == 200) {
-        var jsonResponse = response.body;
-        GetWalletModel res = GetWalletModel.fromJson(json.decode(jsonResponse));
-        //save json in local file
-        file.writeAsStringSync(jsonResponse, flush: true, mode: FileMode.write);
-
-        return res;
-      }
-    }
-  }
-
   ///// get transaction
   Future<TransactionModel?> viewTransaction() async {
     // String fileName = "getTransaction.json";

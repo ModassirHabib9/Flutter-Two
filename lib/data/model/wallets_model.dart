@@ -1,6 +1,3 @@
-import 'dart:core';
-
-
 class WalletsModel {
   String? status;
   int? statusCode;
@@ -39,7 +36,7 @@ class Data {
   int? userId;
   String? accountAddress;
   int? currencyId;
-  String? balance;
+  int? balance;
   String? isDefault;
   String? createdAt;
   String? updatedAt;
@@ -82,16 +79,16 @@ class Currencies {
   String? name;
   String? symbol;
   String? code;
-  String? defalut;
   String? rate;
   String? logo;
+  String? default2;
   String? exchangeFrom;
   String? allowAddressCreation;
   String? status;
   String? createdAt;
   String? updatedAt;
 
-  Currencies({this.id, this.type, this.name, this.symbol, this.code, this.rate, this.logo, this.defalut, this.exchangeFrom, this.allowAddressCreation, this.status, this.createdAt, this.updatedAt});
+  Currencies({this.id, this.type, this.name, this.symbol, this.code, this.rate, this.logo, this.default2, this.exchangeFrom, this.allowAddressCreation, this.status, this.createdAt, this.updatedAt});
 
 Currencies.fromJson(Map<String, dynamic> json) {
 id = json['id'];
@@ -101,7 +98,7 @@ symbol = json['symbol'];
 code = json['code'];
 rate = json['rate'];
 logo = json['logo'];
-defalut = json['default'];
+default2 = json['default'];
 exchangeFrom = json['exchange_from'];
 allowAddressCreation = json['allow_address_creation'];
 status = json['status'];
@@ -118,7 +115,7 @@ Map<String, dynamic> toJson() {
   data['code'] = this.code;
   data['rate'] = this.rate;
   data['logo'] = this.logo;
-  data['default'] = this.defalut;
+  data['default'] = this.default2;
   data['exchange_from'] = this.exchangeFrom;
   data['allow_address_creation'] = this.allowAddressCreation;
   data['status'] = this.status;
