@@ -3,7 +3,7 @@ class ViewProfileModel {
   int? statusCode;
   String? message;
   Data? data;
-  Null? error;
+  String? error;
 
   ViewProfileModel(
       {this.status, this.statusCode, this.message, this.data, this.error});
@@ -31,25 +31,25 @@ class ViewProfileModel {
 
 class Data {
   int? id;
-  Null? roleId;
+  String? roleId;
   String? type;
   String? fullName;
-  Null? firstName;
-  Null? lastName;
+  String? firstName;
+  String? lastName;
   String? phone;
-  Null? google2faSecret;
+  String? google2faSecret;
   String? email;
   String? country;
-  Null? city;
-  Null? state;
-  Null? address;
-  Null? phrase;
+  String? city;
+  String? state;
+  String? address;
+  String? phrase;
   int? addressVerified;
   int? identityVerified;
   String? status;
-  Null? passwordResetCode;
-  Null? rememberToken;
-  Null? picture;
+  String? passwordResetCode;
+  String? rememberToken;
+  String? picture;
   String? createdAt;
   String? updatedAt;
   List<Null>? userDetails;
@@ -57,29 +57,29 @@ class Data {
 
   Data(
       {this.id,
-      this.roleId,
-      this.type,
-      this.fullName,
-      this.firstName,
-      this.lastName,
-      this.phone,
-      this.google2faSecret,
-      this.email,
-      this.country,
-      this.city,
-      this.state,
-      this.address,
-      this.phrase,
-      this.addressVerified,
-      this.identityVerified,
-      this.status,
-      this.passwordResetCode,
-      this.rememberToken,
-      this.picture,
-      this.createdAt,
-      this.updatedAt,
-      this.userDetails,
-      this.wallets});
+        this.roleId,
+        this.type,
+        this.fullName,
+        this.firstName,
+        this.lastName,
+        this.phone,
+        this.google2faSecret,
+        this.email,
+        this.country,
+        this.city,
+        this.state,
+        this.address,
+        this.phrase,
+        this.addressVerified,
+        this.identityVerified,
+        this.status,
+        this.passwordResetCode,
+        this.rememberToken,
+        this.picture,
+        this.createdAt,
+        this.updatedAt,
+        this.userDetails,
+        this.wallets});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -143,8 +143,7 @@ class Data {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     if (this.userDetails != null) {
-      data['user_details'] =
-          this.userDetails!.map((v) => v.toString()).toList();
+      data['user_details'] = this.userDetails!.map((v) => v.toString()).toList();
     }
     if (this.wallets != null) {
       data['wallets'] = this.wallets!.map((v) => v.toJson()).toList();
@@ -158,20 +157,20 @@ class Wallets {
   int? userId;
   String? accountAddress;
   int? currencyId;
-  String? balance;
+  int? balance;
   String? isDefault;
   String? createdAt;
   String? updatedAt;
 
   Wallets(
       {this.id,
-      this.userId,
-      this.accountAddress,
-      this.currencyId,
-      this.balance,
-      this.isDefault,
-      this.createdAt,
-      this.updatedAt});
+        this.userId,
+        this.accountAddress,
+        this.currencyId,
+        this.balance,
+        this.isDefault,
+        this.createdAt,
+        this.updatedAt});
 
   Wallets.fromJson(Map<String, dynamic> json) {
     id = json['id'];

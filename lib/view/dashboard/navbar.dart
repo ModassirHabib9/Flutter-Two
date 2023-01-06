@@ -96,7 +96,7 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
                                         Icons.person,
                                       ),
                                     ),
-                                    errorWidget: CircularProgressIndicator()),
+                                    errorWidget: Image.asset(ImageManager.user_pro)),
                               ),
                             ),
                           );
@@ -160,7 +160,7 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
                                         Icons.person,
                                       ),
                                     ),
-                                    errorWidget: CircularProgressIndicator()),
+                                    errorWidget: Image.asset(ImageManager.user_pro)),
                               ),
                             ),
                           );

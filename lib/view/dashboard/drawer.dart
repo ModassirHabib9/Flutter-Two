@@ -311,9 +311,6 @@ class DashboardState extends State<Dashboard> {
           final pro = Hive.box('viewProfile');
           print(pro);
 
-          _deleteCacheDir();
-          _deleteAppDir();
-
           Get.to(SplashScreen());
         });
   }

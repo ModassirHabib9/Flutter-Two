@@ -18,6 +18,7 @@ import 'data/repositry/add_tickets_repo.dart';
 import 'data/repositry/auth_repo.dart';
 import 'data/repositry/currencies_get_repo.dart';
 import 'data/repositry/edit_profilr_repo.dart';
+import 'data/repositry/home_repo.dart';
 import 'data/repositry/identity_verification.dart';
 import 'data/repositry/image_pick_provider.dart';
 import 'data/repositry/otp_verification.dart';
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SendMoney_Provider()),
         ChangeNotifierProvider(create: (context) => CurrenciesProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageController()),
+        ChangeNotifierProvider(create: (context) => HomeProvider()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),

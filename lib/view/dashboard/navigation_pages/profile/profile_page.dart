@@ -147,10 +147,12 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                     Container(
                                       height: 45,
                                       width: double.infinity,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
+                                      margin: EdgeInsets.symmetric(horizontal: 10),
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 12.w),
                                       alignment: Alignment.centerLeft,
-                                      color: ColorsManager.COLOR_GRAY,
+
                                       child: Text("Personal Details"),
                                     ),
                                     Container(
@@ -198,9 +200,9 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                                 children: [
                                                   Text("State"),
                                                   Text(
-                                                      "${userMap['data']['state']}" == null
+                                                      "Islamabad"/*"${userMap['data']['state']}" == null
                                                           ? "Kpk"
-                                                          : "${userMap['data']['state']}")
+                                                          : "${userMap['data']['state'].toString()}"*/)
                                                 ],
                                               ),
                                             ),
@@ -218,11 +220,10 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                                 children: [
                                                   Text("City"),
                                                   Text(
-                                                      "${userMap['data']['city']}" ==
-                                                          null
-                                                          ? "Karak"
-                                                          : "${userMap['data']['city']}"
-                                                          .toString())
+                                                    /*  "${userMap['data']['city']}" == null
+                                                          ?*/ "Islamabad"
+                                                          /*: "${userMap['data']['city']}"
+                                                          .toString()*/)
                                                 ],
                                               ),
                                             ),

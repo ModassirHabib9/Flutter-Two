@@ -15,8 +15,10 @@ import '../../../../data/repositry/send_money_repo.dart';
 import '../../../../utils/color_manager.dart';
 
 class SendMoney_2Screen extends StatefulWidget {
-  SendMoney_2Screen({Key? key,this.coinName}) : super(key: key);
+  SendMoney_2Screen({Key? key,this.coinName,this.weCoin_accountNo,this.weCoin_balance}) : super(key: key);
   String? coinName;
+  String? weCoin_balance;
+  String? weCoin_accountNo;
 
   @override
   State<SendMoney_2Screen> createState() => _SendMoney_2ScreenState();
@@ -55,7 +57,7 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     accountNo = sharedPreferences.getString('fromKey');
-    account_balance = sharedPreferences.getString('balance');
+    account_balance = sharedPreferences.getString('balance2');
     print("Send Money $accountNo");
     print("Send Balance $account_balance");
   }
@@ -78,6 +80,9 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
     final sendMoney = Provider.of<SendMoney_Provider>(context);
     final get_currencies = Provider.of<CurrenciesProvider>(context);
     final get_wallets = Provider.of<CurrenciesProvider>(context);
+    print(widget.weCoin_accountNo);
+    print(widget.weCoin_balance);
+    print(widget.coinName);
     return Scaffold(
       body: Form(
         key: _formValidKey,
@@ -134,7 +139,20 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: FutureBuilder<CurrenciesModel?>(
+                      child: ListTile(
+                        visualDensity: VisualDensity(
+                            vertical: -1, horizontal: 0),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(ImageManager.weCoin_logo,fit: BoxFit.cover,width: 30,height: 30),
+                        ),
+                        title: Text("WeCoin"),
+                        trailing: Text(
+                          "\$${widget.weCoin_balance}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),/*FutureBuilder<CurrenciesModel?>(
                           future: get_currencies.getCurrencies(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
@@ -208,7 +226,7 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                                     fontWeight: FontWeight.w600),
                               ),
                             );
-                          }),
+                          }),*/
                     ),
                     /* FutureBuilder<CurrenciesModel?>(
                         future: get_currencies.getCurrencies(),
@@ -296,7 +314,7 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                     SizedBox(height: 20.h),
                     SizedBox(height: 30, child: Text("From")),
                     MyCustomTextField(
-                      controller: formController..text = accountNo.toString(),
+                      controller: formController..text = widget.weCoin_accountNo.toString(),
                       hint: "accountNo",
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -325,7 +343,7 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
                         return null;
                       },
                     ),
-                    visibilityObs ? Text("Total Balance: ${account_balance}"):Container(),
+                    visibilityObs ? Text("Total Balance: ${widget.weCoin_balance}"):Container(),
                     SizedBox(height: 20.h),
 
                     SizedBox(height: 30, child: Text("Amount")),

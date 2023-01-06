@@ -27,4 +27,5 @@ class ApiConstants {
   static const String GET_CURRENCIES = '/currencies';
   static const String GET_WALLETS = '/wallets';
   static const String GET_TRANSACTION = '/transactions';
+  static const String GET_HOME = '/recentTransactions?see_all';
 }

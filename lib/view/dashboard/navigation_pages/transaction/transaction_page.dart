@@ -143,20 +143,7 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                                         ),
                                       ),
                                       errorWidget: CircularProgressIndicator()),
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(_text2[index]),
-                                      Text("Type",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: ColorsManager.COLOR_GRAY)),
-                                      SizedBox(height: 10.h)
-                                    ],
-                                  ),
+                                  title: Text(_text2[index]),
                                   subtitle: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

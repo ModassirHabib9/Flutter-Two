@@ -6,12 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:we_coin/view/dashboard/navigation_pages/send_money/send_money_2.dart';
 
 import '../../../../data/model/currencies_model.dart';
 import '../../../../data/repositry/currencies_get_repo.dart';
 import '../../../../data/repositry/view_profile_get.dart';
 import '../../../../utils/color_manager.dart';
+import '../../../../utils/image_manager.dart';
 
 class SendMoneyPageScreen extends StatefulWidget {
   static const String routeName = '/profilePage';
@@ -47,6 +49,18 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
     _postsController = new StreamController();
     loadPosts();
     super.initState();
+    _StoreAccountNo();
+  }
+  String? accountNo;
+  String? account_balance;
+
+  _StoreAccountNo() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    accountNo = sharedPreferences.getString('fromKey');
+    account_balance = sharedPreferences.getString('balance2');
+    print("Send Money $accountNo");
+    print("Send Balance $account_balance");
   }
 
   Future<Null> _handleRefresh() async {
@@ -123,7 +137,7 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
                                                 context,
                                                 listen: false);
                                         viewProfile.getUser1();
-                                        Get.to(SendMoney_2Screen(coinName: userInfo.data![index].name));
+                                        Get.to(SendMoney_2Screen(coinName: userInfo.data![index].name,weCoin_accountNo: accountNo,weCoin_balance: account_balance));
                                       },
                                       child: Card(
                                           shape: RoundedRectangleBorder(
@@ -146,8 +160,7 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
                                                       Icons.person,
                                                     ),
                                                   ),
-                                                  errorWidget:
-                                                      CircularProgressIndicator()),
+                                                  errorWidget: Image.asset(ImageManager.weCoin_logo)),
                                             ),
                                             title: Text(
                                                 "${userInfo.data![index].name == null ? "Empty" : userInfo.data![index].name}"),

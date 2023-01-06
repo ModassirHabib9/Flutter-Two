@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:avatar_view/avatar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:line_chart/charts/line-chart.widget.dart';
 import 'package:line_chart/model/line-chart.model.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:we_coin/utils/color_manager.dart';
 import 'package:we_coin/utils/image_manager.dart';
@@ -13,7 +16,9 @@ import 'package:we_coin/view/dashboard/navigation_pages/home_page/widget/custom_
 import 'package:we_coin/view/dashboard/navigation_pages/profile/profile_page.dart';
 
 import '../../../../data/model/collection_modl.dart';
+import '../../../../data/model/recent_transaction_model.dart';
 import '../../../../data/repositry/collection.dart';
+import '../../../../data/repositry/home_repo.dart';
 import '../../navbar.dart';
 import 'package:dio/dio.dart';
 
@@ -26,9 +31,6 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  var _client = Dio();
   List<LineChartModel> data = [
     LineChartModel(amount: 100, date: DateTime(2020, 1, 1)),
     LineChartModel(amount: 200, date: DateTime(2020, 1, 2)),
@@ -42,9 +44,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
     LineChartModel(amount: 390, date: DateTime(2020, 1, 11)),
     LineChartModel(amount: 900, date: DateTime(2020, 1, 12)),
   ];
-
-  int _counter = 0;
-
   late List<_ChartData> data1;
   late TooltipBehavior _tooltip;
 
@@ -84,17 +83,42 @@ class _HomePageScreenState extends State<HomePageScreen> {
     });
   }
 
+  StreamController? _postsController;
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  int count = 1;
+
+  loadPosts() async {
+    final viewProfile = Provider.of<HomeProvider>(context, listen: false);
+    viewProfile.getHome().then((res) async {
+      _postsController!.add(res);
+      return res;
+    });
+  }
+
+  showSnack() {
+    return scaffoldKey.currentState ==
+        SnackBar(
+          content: Text('New content loaded'),
+        );
+  }
+
+  Future<Null> _handleRefresh() async {
+    count++;
+    print(count);
+    final viewProfile = Provider.of<HomeProvider>(context, listen: false);
+    viewProfile.getHome().then((res) async {
+      _postsController!.add(res);
+      showSnack();
+      return null;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    Paint circlePaint = Paint()..color = Colors.black;
-
-    Paint insideCirclePaint = Paint()..color = Colors.white;
-
-    Paint linePaint = Paint()
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke
-      ..color = ColorsManager.WHITE_COLOR;
-
+    Provider.of<HomeProvider>(context, listen: false).getHome();
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 20),
@@ -205,6 +229,69 @@ class _HomePageScreenState extends State<HomePageScreen> {
               ],
             ),
           ),
+         /* Expanded(
+            child: StreamBuilder(
+              stream: _postsController!.stream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  RecentTransactionsModel? userInfo = snapshot.data;
+                  if (userInfo != null) {
+                    return Scrollbar(
+                      child: RefreshIndicator(
+                        onRefresh: _handleRefresh,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: userInfo.data!.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return ListTile(
+                                leading: AvatarView(
+                                    radius: 24,
+                                    borderWidth: 1,
+                                    borderColor: ColorsManager.YELLOWBUTTON_COLOR,
+                                    avatarType: AvatarType.CIRCLE,
+                                    imagePath: list2[index],
+                                    // placeHolder: Container(
+                                    //   child: Icon(
+                                    //     Icons.person,
+                                    //   ),
+                                    // ),
+                                    errorWidget: CircularProgressIndicator()),
+                                title: Text(_text2[index]),
+                                subtitle: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("12/02/22",
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: ColorsManager.COLOR_GRAY,
+                                        )),
+                                    Text("Send",
+                                        style: TextStyle(
+                                            fontSize: 16, color: ColorsManager.COLOR_BLACK)),
+                                    SizedBox(height: 10.h)
+                                  ],
+                                ),
+                                trailing: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "\$00.00",
+                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                      ),
+                    );
+                  }
+                }
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
+          ),*/
           Expanded(
             child: ListView(
               shrinkWrap: false,

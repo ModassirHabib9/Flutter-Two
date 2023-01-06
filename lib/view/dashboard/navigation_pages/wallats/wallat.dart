@@ -117,18 +117,11 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
             child: StreamBuilder(
               stream: _postsController!.stream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                print('Has error: ${snapshot.hasError}');
-                print('Has data: ${snapshot.hasData}');
-                print('Snapshot Data ${snapshot.data}');
-
                 if (snapshot.hasError) {
                   return Text("Response Error");
                 }
-
                 if (snapshot.hasData) {
                   WalletsModel? userInfo = snapshot.data;
-                  final a=userInfo!.data!.map((e) => e.balance);
-                  print("a${a}");
                   return Column(
                     children: <Widget>[
                       Expanded(
@@ -207,11 +200,10 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
                   );
                 }
 
-                if (!snapshot.hasData &&
-                    snapshot.connectionState == ConnectionState.done) {
+                if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
                   return Text('No Posts');
                 }
-                return Text("data");
+                return Text("No..");
               },
             ),),
 
