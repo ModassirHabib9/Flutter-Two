@@ -31,7 +31,7 @@ class SendMoney_Provider with ChangeNotifier {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: {
-          "currency": "6", //currency,
+          "currency": "1", //currency,
           "from": from,
           "to": to,
           "amount": amount,

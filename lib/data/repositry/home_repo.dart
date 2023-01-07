@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/api_constant.dart';
@@ -13,19 +14,24 @@ class HomeProvider with ChangeNotifier{
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    print("__/Recent Home ${token}\\__");
+    print("________________________/ \\_________________________");
 
     var response = await http.get(
         Uri.parse(
-          ApiConstants.BASE_URL + ApiConstants.GET_WALLETS,
+          ApiConstants.BASE_URL + ApiConstants.GET_HOME,
         ),
         headers: {
           "authentication": "${token}",
         });
 
     if (response.statusCode == 200) {
-      print("__/Recent Home Response ${token}\\__");
       var jsonResponse = response.body;
+      var box = await Hive.openBox('GetHome');
+      box.put('name', response.body);
+      final users = box.get('name');
+      final Map<String, dynamic> userMap = jsonDecode(users);
+      print("____________________//\\_______________________");
+      print("$userMap");
       RecentTransactionsModel res = RecentTransactionsModel.fromJson(json.decode(jsonResponse));
 
       return res;

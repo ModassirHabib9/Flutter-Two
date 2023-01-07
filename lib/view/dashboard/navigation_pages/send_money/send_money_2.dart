@@ -409,14 +409,29 @@ class _SendMoney_2ScreenState extends State<SendMoney_2Screen> {
 
                           }*/
                           print("successful");
-                          sendMoney.sendMoney(
+                          if(widget.weCoin_balance!=0){
+
+                                print("This Account Balance Avaliable");
+                                sendMoney.sendMoney(
+                                    context,
+                                    dropdownvalue.toString(),
+                                    widget.weCoin_accountNo.toString(),
+                                    toController.text,
+                                    amountController.text,
+                                    notesController.text,
+                                    networks_feeController.text);
+                          }
+                          else{
+                            print("Your Account is 0");
+                          }
+                          /*sendMoney.sendMoney(
                               context,
                               dropdownvalue.toString(),
-                              formController.text,
+                              widget.weCoin_accountNo.toString(),
                               toController.text,
                               amountController.text,
                               notesController.text,
-                              networks_feeController.text);
+                              networks_feeController.text);*/
                           return;
                         } else {
                           print("UnSuccessfull");

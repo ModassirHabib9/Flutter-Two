@@ -1,17 +1,21 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:avatar_view/avatar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hive/hive.dart';
 import 'package:line_chart/charts/line-chart.widget.dart';
 import 'package:line_chart/model/line-chart.model.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:we_coin/utils/color_manager.dart';
 import 'package:we_coin/utils/image_manager.dart';
 import 'package:we_coin/view/dashboard/drawer.dart';
+import 'package:we_coin/view/dashboard/navigation_pages/home_page/see_all.dart';
 import 'package:we_coin/view/dashboard/navigation_pages/home_page/widget/custom_coin_card.dart';
 import 'package:we_coin/view/dashboard/navigation_pages/profile/profile_page.dart';
 
@@ -47,20 +51,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
   late List<_ChartData> data1;
   late TooltipBehavior _tooltip;
 
-  @override
-  void initState() {
-    data1 = [
-      _ChartData('CHN', 12),
-      _ChartData('GER', 15),
-      _ChartData('RUS', 30),
-      _ChartData('BRZ', 6.4),
-      _ChartData('IND', 14),
-      _ChartData('Pak', 14),
-    ];
-    _tooltip = TooltipBehavior(enable: true);
-    super.initState();
-  }
-
   ///bottom Grid
   List<String> _text2 = [
     'WeCoin',
@@ -86,11 +76,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
   StreamController? _postsController;
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  int count = 1;
+  // int count = 1;
 
   loadPosts() async {
-    final viewProfile = Provider.of<HomeProvider>(context, listen: false);
-    viewProfile.getHome().then((res) async {
+    final view= Provider.of<HomeProvider>(context, listen: false);
+    view.getHome();
+    Hive.openBox('GetHome').then((res) async {
       _postsController!.add(res);
       return res;
     });
@@ -102,23 +93,76 @@ class _HomePageScreenState extends State<HomePageScreen> {
           content: Text('New content loaded'),
         );
   }
+  String? accountNo;
+  String? balance;
 
-  Future<Null> _handleRefresh() async {
-    count++;
-    print(count);
-    final viewProfile = Provider.of<HomeProvider>(context, listen: false);
-    viewProfile.getHome().then((res) async {
+  _storeBalance() async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    accountNo = prefs.getString('fromKey');
+    balance = prefs.getString('balance2');
+    print("Used Shared Data");
+    print("Ac-No:${accountNo}"+"Ac-Bl:${balance}");
+  }
+  @override
+  void initState() {
+    _postsController = new StreamController();
+    Hive.openBox('GetHome');
+    _storeBalance();
+    setState(() {
+      Hive.openBox('GetHome');
+      final viewTicket =
+      Provider.of<HomeProvider>(context, listen: false);
+      viewTicket.getHome();
+      print(viewTicket);
+    });
+    loadPosts();
+      data1 = [
+        _ChartData('CHN', 12),
+        _ChartData('GER', 15),
+        _ChartData('RUS', 30),
+        _ChartData('BRZ', 6.4),
+        _ChartData('IND', 14),
+        _ChartData('Pak', 14),
+      ];
+      _tooltip = TooltipBehavior(enable: true);
+      getDataAgain();
+      super.initState();
+      final Dispute =
+      Provider.of<HomeProvider>(context, listen: false);
+      Dispute.getHome();
+      print(Dispute);
+      loadPosts();
+
+  }
+
+  Future _handleRefresh() async {
+    Hive.openBox('GetHome');
+
+    final viewTicket =
+    Provider.of<HomeProvider>(context, listen: false);
+    viewTicket.getHome();
+    print(viewTicket);
+    Hive.openBox('GetHome').then((res) async {
       _postsController!.add(res);
       showSnack();
       return null;
     });
   }
+  @protected
+  void didUpdateWidget(HomePageScreen oldWidget) {
+    Provider.of<HomeProvider>(context, listen: false).getHome();
+    super.didUpdateWidget(oldWidget);
 
-
-
+  }
+  @override
+  void didChangeDependencies() {
+    final view= Provider.of<HomeProvider>(context, listen: false);
+    view.getHome();
+  }
   @override
   Widget build(BuildContext context) {
-    Provider.of<HomeProvider>(context, listen: false).getHome();
+   final home= Provider.of<HomeProvider>(context, listen: false);
+   home.getHome();
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 20),
@@ -148,9 +192,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
                         coinPicture: ImageManager.currency_one,
                         cardColor: ColorsManager.COLOR_BLACK,
                         coinName: "WeCoin",
-                        coinRate: "5,451 WEC",
+                        coinRate: "${balance} WEC",
                         coinPrice: "\$124,0",
-                        coinPercent: "40"),
+                        coinPercent: "1"),
                   ),
                   SizedBox(width: 10.w),
                   Container(
@@ -223,123 +267,134 @@ class _HomePageScreenState extends State<HomePageScreen> {
                         fontSize: 14.sp,
                       ),
                     ),
-                    Text("See All", style: TextStyle()),
+                    InkWell(onTap: (){
+                      Get.to(SeeAllTransactionScreen());
+                    },child: Text("See All", style: TextStyle())),
                   ],
                 ),
               ],
             ),
           ),
-         /* Expanded(
-            child: StreamBuilder(
-              stream: _postsController!.stream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  RecentTransactionsModel? userInfo = snapshot.data;
-                  if (userInfo != null) {
-                    return Scrollbar(
-                      child: RefreshIndicator(
+          Expanded(child: StreamBuilder(
+            stream: _postsController!.stream,
+            builder: (context, snapshot) {
+              final box = snapshot.data;
+              // Get the data from the box
+              final users = box!.get('name');
+              if (users == null) {
+                return Center(
+                  child: Scrollbar(
+                    child: RefreshIndicator(
                         onRefresh: _handleRefresh,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: userInfo.data!.length,
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              return ListTile(
-                                leading: AvatarView(
-                                    radius: 24,
-                                    borderWidth: 1,
-                                    borderColor: ColorsManager.YELLOWBUTTON_COLOR,
-                                    avatarType: AvatarType.CIRCLE,
-                                    imagePath: list2[index],
-                                    // placeHolder: Container(
-                                    //   child: Icon(
-                                    //     Icons.person,
-                                    //   ),
-                                    // ),
-                                    errorWidget: CircularProgressIndicator()),
-                                title: Text(_text2[index]),
-                                subtitle: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text("12/02/22",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: ColorsManager.COLOR_GRAY,
-                                        )),
-                                    Text("Send",
-                                        style: TextStyle(
-                                            fontSize: 16, color: ColorsManager.COLOR_BLACK)),
-                                    SizedBox(height: 10.h)
-                                  ],
+                        child: Image.asset(ImageManager.noDataFound)),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                final box = snapshot.data;
+                // Get the data from the box
+                final users = box!.get('name');
+                final Map<String, dynamic> userMap = jsonDecode(users);
+                return Scrollbar(
+                  child: RefreshIndicator(
+                      onRefresh: _handleRefresh,
+                      child: ListView.builder(
+                        itemCount: 7,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: AvatarView(
+                                radius: 24,
+                                borderWidth: 1,
+                                borderColor: ColorsManager.YELLOWBUTTON_COLOR,
+                                avatarType: AvatarType.CIRCLE,
+                                imagePath:  "${userMap['data'][index]['currencies']['logo']==null?ImageManager.weCoin_logo:userMap['data'][index]['currencies']['logo']}",
+                                placeHolder: Container(
+                                    child: Image.asset(ImageManager.user_pro)
                                 ),
-                                trailing: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "\$00.00",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                      ),
-                    );
-                  }
-                }
+                                errorWidget: CircularProgressIndicator()),
+                            title: Text("${userMap['data'][index]['currencies']['name']}"),
+                            subtitle: Text("${userMap['data'][index]['created_at']}",
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: ColorsManager.COLOR_GRAY,
+                                )),
+                            trailing: Column(children:[
+                          Text(
+                          "\$${userMap['data'][index]['subtotal'].toString().substring(0,5)}",
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          if(userMap['data'][index]['status']=="Pending")
+                          Text("${userMap['data'][index]['status']}",
+                          style: TextStyle(fontSize: 12,  color: ColorsManager.COLOR_RED))
+                          ]));
+                        },
+                      )),
+                );
+              }
+              return Text("Loading......");
+            },
+          )),
+          /*Expanded(child: FutureBuilder<RecentTransactionsModel?>(
+            future: home.getHome(),
+            builder: (
+                BuildContext context,
+                AsyncSnapshot<RecentTransactionsModel?> snapshot,
+                ) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),*/
-          Expanded(
-            child: ListView(
-              shrinkWrap: false,
-              children: List.generate(
-                list2.length,
-                (index) => ListTile(
-                  leading: AvatarView(
-                      radius: 24,
-                      borderWidth: 1,
-                      borderColor: ColorsManager.YELLOWBUTTON_COLOR,
-                      avatarType: AvatarType.CIRCLE,
-                      imagePath: list2[index],
-                      // placeHolder: Container(
-                      //   child: Icon(
-                      //     Icons.person,
-                      //   ),
-                      // ),
-                      errorWidget: CircularProgressIndicator()),
-                  title: Text(_text2[index]),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("12/02/22",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: ColorsManager.COLOR_GRAY,
-                          )),
-                      Text("Send",
-                          style: TextStyle(
-                              fontSize: 16, color: ColorsManager.COLOR_BLACK)),
-                      SizedBox(height: 10.h)
-                    ],
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "\$00.00",
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return const Text('Error');
+                } else if (snapshot.hasData) {
+                  RecentTransactionsModel? userInfo = snapshot.data;
+                  print("Tickits=>${userInfo!.data!.first.id}");
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: userInfo.data!.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return ListTile(
+                          leading: AvatarView(
+                              radius: 24,
+                              borderWidth: 1,
+                              borderColor: ColorsManager.YELLOWBUTTON_COLOR,
+                              avatarType: AvatarType.CIRCLE,
+                              imagePath: "${userInfo.data![index].currencies!.logo==null?ImageManager.weCoin_logo:userInfo.data![index].currencies!.logo}",
+                              placeHolder: Container(
+                                  child: Image.asset(ImageManager.user_pro)
+                              ),
+                              errorWidget: CircularProgressIndicator()),
+                          title: Text(userInfo.data![index].currencies!.name!),
+                          subtitle: Text("${userInfo.data![index].currencies!.createdAt}",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: ColorsManager.COLOR_GRAY,
+                              )),
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "\$${userInfo.data![index].subtotal!.substring(0,5)}",
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                              if(userInfo.data![index].status=="Pending")
+                              Text( "${userInfo.data![index].status!}",
+                                  style: TextStyle(fontSize: 12,  color: ColorsManager.COLOR_RED)),
+                             *//* if(userInfo.data![index].status=="Pending")
+                                Text( "${userInfo.data![index].status!}",
+                                    style: TextStyle(fontSize: 16,  color: ColorsManager.COLOR_BLACK)),*//*
+                            ],
+                          ),
+                        );
+                      });
+                } else {
+                  return const Text('Empty data');
+                }
+              } else {
+                return Text('State: ${snapshot.connectionState}');
+              }
+            },
+          ))
+*/
         ],
       ),
     ));

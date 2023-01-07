@@ -65,7 +65,7 @@ class Transactions {
   int? endUserId;
   String? fromAccount;
   String? toAccount;
-  String? currencyId;
+  int? currencyId;
   String? paymentMethodId;
   String? merchantId;
   String? bankId;
@@ -88,30 +88,30 @@ class Transactions {
 
   Transactions(
       {this.id,
-      this.userId,
-      this.endUserId,
-      this.fromAccount,
-      this.toAccount,
-      this.currencyId,
-      this.paymentMethodId,
-      this.merchantId,
-      this.bankId,
-      this.fileId,
-      this.refundReference,
-      this.transactionReferenceId,
-      this.transactionTypeId,
-      this.userType,
-      this.email,
-      this.phone,
-      this.subtotal,
-      this.percentage,
-      this.chargePercentage,
-      this.chargeFixed,
-      this.total,
-      this.note,
-      this.status,
-      this.createdAt,
-      this.updatedAt});
+        this.userId,
+        this.endUserId,
+        this.fromAccount,
+        this.toAccount,
+        this.currencyId,
+        this.paymentMethodId,
+        this.merchantId,
+        this.bankId,
+        this.fileId,
+        this.refundReference,
+        this.transactionReferenceId,
+        this.transactionTypeId,
+        this.userType,
+        this.email,
+        this.phone,
+        this.subtotal,
+        this.percentage,
+        this.chargePercentage,
+        this.chargeFixed,
+        this.total,
+        this.note,
+        this.status,
+        this.createdAt,
+        this.updatedAt});
 
   Transactions.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -182,11 +182,11 @@ class Pagination {
 
   Pagination(
       {this.page,
-      this.pages,
-      this.count,
-      this.perPage,
-      this.sortBy,
-      this.sortOrder});
+        this.pages,
+        this.count,
+        this.perPage,
+        this.sortBy,
+        this.sortOrder});
 
   Pagination.fromJson(Map<String, dynamic> json) {
     page = json['page'];

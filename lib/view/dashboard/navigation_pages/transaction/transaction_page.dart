@@ -143,7 +143,7 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                                         ),
                                       ),
                                       errorWidget: CircularProgressIndicator()),
-                                  title: Text(_text2[index]),
+                                  title: Text(userInfo.data!.transactions![index].fromAccount.toString()),
                                   subtitle: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -184,7 +184,7 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "\$${userInfo.data!.transactions![index].total!.substring(0, 6)}",
+                                        "\$${userInfo.data!.transactions![index].subtotal!.substring(0, 6)}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600),
                                       ),

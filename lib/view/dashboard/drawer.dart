@@ -21,6 +21,7 @@ import 'navigation_pages/deposit/deposit.dart';
 import 'navigation_pages/dispute/dispute.dart';
 import 'navigation_pages/notification/notification.dart';
 import 'navigation_pages/tickets/tickets.dart';
+import 'navigation_pages/transaction/transaction.dart';
 
 class DrawerItem {
   String? title;
@@ -87,27 +88,6 @@ class Dashboard extends StatefulWidget {
           height: 20,
           width: 20,
         )),
-    /*new DrawerItem(
-        "Setting",
-        Icon(
-          Icons.settings,
-          color: ColorsManager.COLOR_BLACK,
-          size: 20,
-        )),
-    new DrawerItem(
-        "Privacy",
-        Icon(
-          Icons.privacy_tip,
-          color: ColorsManager.COLOR_BLACK,
-          size: 20,
-        )),
-    new DrawerItem(
-        "About Us",
-        Icon(
-          Icons.add_circle_outline,
-          color: ColorsManager.COLOR_BLACK,
-          size: 20,
-        )),*/
   ];
 
   @override
@@ -137,6 +117,7 @@ class DashboardState extends State<Dashboard> {
         return new DepositPageScreen();
       case 5:
         return new DisputedPageScreen();
+
         break;
       /*case 6:
         return new SettingScreen();
@@ -301,31 +282,33 @@ class DashboardState extends State<Dashboard> {
         onConfirmBtnTap: () async {
           SharedPreferences preferences = await SharedPreferences.getInstance();
           await preferences.remove('token');
+          await preferences.remove('accountNo');
+          await preferences.remove('balance2');
           await preferences.clear();
           print(preferences.getString('token'));
           print("===> Remove ${preferences.remove('token')}");
-          Hive.box('viewProfile').clear();
-          Hive.box('viewDispute').clear();
-          Hive.box('viewTickets').clear();
+          // Hive.box('viewProfile').clear();
+          // Hive.box('viewDispute').clear();
+          // Hive.box('viewTickets').clear();
 
-          final pro = Hive.box('viewProfile');
-          print(pro);
+          // final pro = Hive.box('viewProfile');
+          // print(pro);
 
           Get.to(SplashScreen());
         });
   }
-
-  Future<void> _deleteCacheDir() async {
-    Directory tempDir = await getTemporaryDirectory();
-    if (tempDir.existsSync()) {
-      tempDir.deleteSync(recursive: true);
-    }
-  }
-
-  Future<void> _deleteAppDir() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    if (appDocDir.existsSync()) {
-      appDocDir.deleteSync(recursive: true);
-    }
-  }
+  //
+  // Future<void> _deleteCacheDir() async {
+  //   Directory tempDir = await getTemporaryDirectory();
+  //   if (tempDir.existsSync()) {
+  //     tempDir.deleteSync(recursive: true);
+  //   }
+  // }
+  //
+  // Future<void> _deleteAppDir() async {
+  //   Directory appDocDir = await getApplicationDocumentsDirectory();
+  //   if (appDocDir.existsSync()) {
+  //     appDocDir.deleteSync(recursive: true);
+  //   }
+  // }
 }

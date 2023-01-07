@@ -83,6 +83,9 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
 
   @override
   Widget build(BuildContext context) {
+   final wallet =
+        Provider.of<CurrenciesProvider>(context, listen: false);
+    wallet.getWallets();
     return Scaffold(
       body: Column(
         children: [
@@ -113,99 +116,90 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
               ],
             ),
           ),
-          Expanded(
-            child: StreamBuilder(
-              stream: _postsController!.stream,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
+
+          Expanded(child: FutureBuilder<WalletsModel?>(
+            future: wallet.getWallets(),
+            builder: (
+                BuildContext context,
+                AsyncSnapshot<WalletsModel?> snapshot,
+                ) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
-                  return Text("Response Error");
-                }
-                if (snapshot.hasData) {
+                  return const Text('Error');
+                } else if (snapshot.hasData) {
                   WalletsModel? userInfo = snapshot.data;
-                  return Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Scrollbar(
-                          child: RefreshIndicator(
-                              onRefresh: _handleRefresh,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: userInfo!.data!.length,
-                                  itemBuilder: (BuildContext ctxt, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                      child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>RecievedBtcScreen()));
-                                          },
-                                          child: Card(
-                                            elevation: 10,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10)),
-                                            child: ListTile(
-                                              contentPadding: EdgeInsets.symmetric(
-                                                  horizontal: 12.0, vertical: 10),
-                                              leading: CircleAvatar(
-                                                radius: 20,
-                                                backgroundImage: NetworkImage( "http://wecoin.pk/weCoinApp/uploads/${userInfo.data![index].currencies!.logo}"),
-                                              ),
-                                              title: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "${userInfo.data![index].currencies!.name}",
-                                                    textDirection: TextDirection.rtl,
-                                                    softWrap: true,
-                                                    style: TextStyle(
-                                                        fontSize: 15.sp,
-                                                        fontWeight: FontWeight.w600),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "${userInfo.data![index].currencies!.rate!.substring(0,5)}",
-                                                        textDirection: TextDirection.rtl,
-                                                        softWrap: true,
-                                                        style: TextStyle(
-                                                            fontSize: 15.sp,
-                                                            fontWeight: FontWeight.w600),
-                                                      ),
-                                                      SizedBox(width: 60),
-                                                      Image.asset(
-                                                        "${ImageManager.qr_1}",
-                                                        /*"http://wecoin.pk/weCoinApp/uploads/${userInfo.data![index].currencies!.logo}",*/
-                                                        height: 40,
-                                                        width: 40,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )),
-                                    );
-                                  })),
-                        ),
-                      ),
-                    ],
-                  );
-                }
 
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: userInfo!.data!.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>RecievedBtcScreen()));
+                              },
+                              child: Card(
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 12.0, vertical: 10),
+                                  leading: CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: NetworkImage( "http://wecoin.pk/weCoinApp/uploads/${userInfo.data![index].currencies!.logo}"),
+                                  ),
+                                  title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${userInfo.data![index].currencies!.name}",
+                                        textDirection: TextDirection.rtl,
+                                        softWrap: true,
+                                        style: TextStyle(
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${userInfo.data![index].currencies!.rate!.substring(0,5)}",
+                                            textDirection: TextDirection.rtl,
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontSize: 15.sp,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          SizedBox(width: 60),
+                                          Image.asset(
+                                            "${ImageManager.qr_1}",
+                                            /*"http://wecoin.pk/weCoinApp/uploads/${userInfo.data![index].currencies!.logo}",*/
+                                            height: 40,
+                                            width: 40,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                        );
+                      });
+                } else {
+                  return const Text('Empty data');
                 }
+              } else {
+                return Text('State: ${snapshot.connectionState}');
+              }
+            },
+          ))
 
-                if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-                  return Text('No Posts');
-                }
-                return Text("No..");
-              },
-            ),),
 
         ],
       ),
