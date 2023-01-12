@@ -1,17 +1,17 @@
 import 'dart:async';
 
+import 'package:avatar_view/avatar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:we_coin/data/repositry/view_profile_get.dart';
 import 'package:we_coin/view/dashboard/navigation_pages/wallats/qr_code/recieved_btc.dart';
-import '../../../../data/model/currencies_model.dart';
+
 import '../../../../data/model/wallets_model.dart';
 import '../../../../data/repositry/currencies_get_repo.dart';
 import '../../../../utils/color_manager.dart';
 import '../../../../utils/image_manager.dart';
-import '../profile/profile_page.dart';
 
 class RecivedMoneyPageScreen extends StatefulWidget {
   const RecivedMoneyPageScreen({Key? key}) : super(key: key);
@@ -47,8 +47,7 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
   int count = 1;
 
   loadPosts() async {
-    final viewProfile =
-    Provider.of<CurrenciesProvider>(context, listen: false);
+    final viewProfile = Provider.of<CurrenciesProvider>(context, listen: false);
     viewProfile.getWallets().then((res) async {
       _postsController!.add(res);
       return res;
@@ -67,13 +66,13 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
     _postsController = new StreamController();
     loadPosts();
     super.initState();
+    _storeBalance();
   }
 
   Future<Null> _handleRefresh() async {
     count++;
     print(count);
-    final viewProfile =
-    Provider.of<CurrenciesProvider>(context, listen: false);
+    final viewProfile = Provider.of<CurrenciesProvider>(context, listen: false);
     viewProfile.getWallets().then((res) async {
       _postsController!.add(res);
       showSnack();
@@ -81,10 +80,25 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
     });
   }
 
+  String? accountNo;
+  String? balance;
+  double? amount;
+  double? percent;
+  _storeBalance() async {
+    setState(() {});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    accountNo = prefs.getString('fromKey');
+    balance = prefs.getString('balance2');
+    amount = prefs.getDouble('amount');
+    percent = (amount! / amount!) * 100;
+    print("Percentage ${percent}");
+    print("Ac-No:${accountNo}" + "Ac-Bl:${balance}");
+  }
+
   @override
   Widget build(BuildContext context) {
-   final wallet =
-        Provider.of<CurrenciesProvider>(context, listen: false);
+    final wallet = Provider.of<CurrenciesProvider>(context, listen: false);
+    final profile = Provider.of<ViewProfile_Provider>(context, listen: false);
     wallet.getWallets();
     return Scaffold(
       body: Column(
@@ -98,12 +112,46 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Total: 750\$",
-                  style: TextStyle(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.w600,
-                      color: ColorsManager.WHITE_COLOR),
+                FutureBuilder<WalletsModel?>(
+                  future: wallet.getWallets(),
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<WalletsModel?> snapshot,
+                  ) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text(
+                        "Total: ${balance == null ? "0.00" : balance}\$",
+                        style: TextStyle(
+                            fontSize: 25.sp,
+                            fontWeight: FontWeight.w600,
+                            color: ColorsManager.WHITE_COLOR),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return const Text('Error');
+                      } else if (snapshot.hasData) {
+                        WalletsModel? userInfo = snapshot.data;
+                        return Text(
+                          "Total: ${userInfo!.data!.first.balance}\$",
+                          style: TextStyle(
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.w600,
+                              color: ColorsManager.WHITE_COLOR),
+                        );
+                      } else {
+                        return Text(
+                          "Total: 00\$",
+                          style: TextStyle(
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.w600,
+                              color: ColorsManager.WHITE_COLOR),
+                        );
+                      }
+                    } else {
+                      return Text('State: ${snapshot.connectionState}');
+                    }
+                  },
                 ),
                 SizedBox(height: 5.h),
                 /*Text(
@@ -116,13 +164,13 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
               ],
             ),
           ),
-
-          Expanded(child: FutureBuilder<WalletsModel?>(
+          Expanded(
+              child: FutureBuilder<WalletsModel?>(
             future: wallet.getWallets(),
             builder: (
-                BuildContext context,
-                AsyncSnapshot<WalletsModel?> snapshot,
-                ) {
+              BuildContext context,
+              AsyncSnapshot<WalletsModel?> snapshot,
+            ) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else if (snapshot.connectionState == ConnectionState.done) {
@@ -142,7 +190,13 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>RecievedBtcScreen()));
+                                        builder: (context) => RecievedBtcScreen(
+                                            AccountBalance: userInfo
+                                                .data![index].balance
+                                                .toString(),
+                                            accountNo: userInfo
+                                                .data![index].accountAddress
+                                                .toString())));
                               },
                               child: Card(
                                 elevation: 10,
@@ -151,12 +205,29 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
                                 child: ListTile(
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: 12.0, vertical: 10),
-                                  leading: CircleAvatar(
+                                  leading: AvatarView(
+                                      radius: 24,
+                                      borderWidth: 2,
+                                      borderColor:
+                                          ColorsManager.YELLOWBUTTON_COLOR,
+                                      avatarType: AvatarType.CIRCLE,
+                                      imagePath:
+                                          "http://wecoin.pk/weCoinApp/uploads/${userInfo.data![index].currencies!.logo == null ? ImageManager.weCoin_logo : userInfo.data![index].currencies!.logo}",
+                                      placeHolder: Container(
+                                        child: Icon(
+                                          Icons.person,
+                                        ),
+                                      ),
+                                      errorWidget: Image.asset(
+                                          ImageManager.weCoin_logo)),
+                                  /*CircleAvatar(
                                     radius: 20,
-                                    backgroundImage: NetworkImage( "http://wecoin.pk/weCoinApp/uploads/${userInfo.data![index].currencies!.logo}"),
-                                  ),
+                                    backgroundImage: NetworkImage(
+                                        "http://wecoin.pk/weCoinApp/uploads/${userInfo.data![index].currencies!.logo}"),
+                                  ),*/
                                   title: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${userInfo.data![index].currencies!.name}",
@@ -169,7 +240,7 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
                                       Row(
                                         children: [
                                           Text(
-                                            "${userInfo.data![index].currencies!.rate!.substring(0,5)}",
+                                            "${userInfo.data![index].balance.toString()}",
                                             textDirection: TextDirection.rtl,
                                             softWrap: true,
                                             style: TextStyle(
@@ -199,15 +270,11 @@ class _RecivedMoneyPageScreenState extends State<RecivedMoneyPageScreen> {
               }
             },
           ))
-
-
         ],
       ),
     );
   }
 }
-
-
 
 /*
 import 'package:flutter/material.dart';

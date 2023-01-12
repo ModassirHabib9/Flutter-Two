@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:line_chart/charts/line-chart.widget.dart';
 import 'package:line_chart/model/line-chart.model.dart';
 
 import '../../../../../utils/color_manager.dart';
-import '../../../../../utils/image_manager.dart';
 
 class CustomCoinCard extends StatelessWidget {
   String? coinName;
@@ -70,18 +68,21 @@ class CustomCoinCard extends StatelessWidget {
               )
             ],
           ),
+          SizedBox(height: 18),
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
               coinRate!,
               textAlign: TextAlign.start,
+              // maxLines: 1,
+              // overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   color: ColorsManager.WHITE_COLOR,
                   fontWeight: FontWeight.w600,
-                  fontSize: 16.sp),
+                  fontSize: 14.sp),
             ),
           ),
-          LineChart(
+          /* LineChart(
             width: 100,
             height: 30,
             data: data,
@@ -102,7 +103,7 @@ class CustomCoinCard extends StatelessWidget {
             onDropPointer: () {
               print('onDropPointer');
             },
-          ),
+          ),*/
           Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

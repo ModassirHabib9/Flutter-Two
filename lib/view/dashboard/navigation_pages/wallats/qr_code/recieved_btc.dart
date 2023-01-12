@@ -9,11 +9,22 @@ import 'package:we_coin/common_widget/my_custom_textfield.dart';
 import '../../../../../utils/color_manager.dart';
 import '../../../../../utils/image_manager.dart';
 
-class RecievedBtcScreen extends StatelessWidget {
-  const RecievedBtcScreen({Key? key}) : super(key: key);
+class RecievedBtcScreen extends StatefulWidget {
+  RecievedBtcScreen({Key? key, this.accountNo, this.AccountBalance})
+      : super(key: key);
+
+  String? accountNo, AccountBalance;
+
+  @override
+  State<RecievedBtcScreen> createState() => _RecievedBtcScreenState();
+}
+
+class _RecievedBtcScreenState extends State<RecievedBtcScreen> {
+  TextEditingController AccountNoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    print(widget.accountNo);
     return Scaffold(
       body: Column(
         children: [
@@ -41,7 +52,7 @@ class RecievedBtcScreen extends StatelessWidget {
                     actions: []),
                 SizedBox(height: 20.h),
                 Text(
-                  "\$75021311",
+                  "Total: \$${widget.AccountBalance}",
                   style: TextStyle(
                       fontSize: 25.sp,
                       fontWeight: FontWeight.w600,
@@ -74,7 +85,7 @@ class RecievedBtcScreen extends StatelessWidget {
                   Container(
                     height: 90,
                     child: Text(
-                      "Only receive BTC to this address, receiving any other coin will result in permanent loss.",
+                      "Only receive WECOIN to this Account, receiving any other coin will result in permanent loss.",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 20.sp),
                     ),
@@ -82,11 +93,13 @@ class RecievedBtcScreen extends StatelessWidget {
                   SizedBox(height: 30),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Recieving Address"),
+                    child: Text("Receiving Address"),
                   ),
                   SizedBox(height: 10),
                   MyCustomTextField(
-                    hint: 'asdsadsadsadsa',
+                    hint: 'Account No',
+                    controller: AccountNoController
+                      ..text = widget.accountNo.toString(),
                     suffixIcon: Icon(Icons.copy),
                   ),
                   MyCustomButton(

@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:we_coin/view/dashboard/navigation_pages/send_money/send_money_2.dart';
 
 import '../../../../data/model/currencies_model.dart';
+import '../../../../data/model/wallets_model.dart';
 import '../../../../data/repositry/currencies_get_repo.dart';
 import '../../../../data/repositry/view_profile_get.dart';
 import '../../../../utils/color_manager.dart';
@@ -51,6 +52,7 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
     super.initState();
     _StoreAccountNo();
   }
+
   String? accountNo;
   String? account_balance;
 
@@ -77,6 +79,7 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
   @override
   Widget build(BuildContext context) {
     final viewProfile = Provider.of<CurrenciesProvider>(context, listen: false);
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -90,12 +93,46 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "\$75021311",
-                  style: TextStyle(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.w600,
-                      color: ColorsManager.WHITE_COLOR),
+                FutureBuilder<WalletsModel?>(
+                  future: viewProfile.getWallets(),
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<WalletsModel?> snapshot,
+                  ) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text(
+                        "Total: 0.00\$",
+                        style: TextStyle(
+                            fontSize: 25.sp,
+                            fontWeight: FontWeight.w600,
+                            color: ColorsManager.WHITE_COLOR),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return const Text('Error');
+                      } else if (snapshot.hasData) {
+                        WalletsModel? userInfo = snapshot.data;
+                        return Text(
+                          "Total: ${userInfo!.data!.first.balance}\$",
+                          style: TextStyle(
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.w600,
+                              color: ColorsManager.WHITE_COLOR),
+                        );
+                      } else {
+                        return Text(
+                          "Total: 00\$",
+                          style: TextStyle(
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.w600,
+                              color: ColorsManager.WHITE_COLOR),
+                        );
+                      }
+                    } else {
+                      return Text('State: ${snapshot.connectionState}');
+                    }
+                  },
                 ),
                 SizedBox(height: 5.h),
                 Text(
@@ -137,7 +174,11 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
                                                 context,
                                                 listen: false);
                                         viewProfile.getUser1();
-                                        Get.to(SendMoney_2Screen(coinName: userInfo.data![index].name,weCoin_accountNo: accountNo,weCoin_balance: account_balance));
+                                        Get.to(SendMoney_2Screen(
+                                            coinName:
+                                                userInfo.data![index].name,
+                                            weCoin_accountNo: accountNo,
+                                            weCoin_balance: account_balance));
                                       },
                                       child: Card(
                                           shape: RoundedRectangleBorder(
@@ -160,7 +201,9 @@ class _SendMoneyPageScreenState extends State<SendMoneyPageScreen> {
                                                       Icons.person,
                                                     ),
                                                   ),
-                                                  errorWidget: Image.asset(ImageManager.weCoin_logo)),
+                                                  errorWidget: Image.asset(
+                                                      ImageManager
+                                                          .weCoin_logo)),
                                             ),
                                             title: Text(
                                                 "${userInfo.data![index].name == null ? "Empty" : userInfo.data![index].name}"),

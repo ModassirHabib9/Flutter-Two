@@ -6,6 +6,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:we_coin/common_widget/my_custom_button.dart';
+import 'package:we_coin/data/repositry/view_profile_get.dart';
 import 'package:we_coin/utils/color_manager.dart';
 import 'package:we_coin/utils/image_manager.dart';
 import 'package:we_coin/view/auth/login.dart';
@@ -23,6 +24,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
+    Provider.of<ViewProfile_Provider>(context, listen: false).getUser1();
     return Scaffold(
       backgroundColor: ColorsManager.APP_MAIN_COLOR,
       body: SafeArea(

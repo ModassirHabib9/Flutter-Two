@@ -9,7 +9,6 @@ import '../../../../data/model/get_transaction_model.dart';
 import '../../../../data/repositry/currencies_get_repo.dart';
 import '../../../../utils/color_manager.dart';
 import '../../../../utils/image_manager.dart';
-import 'dart:math' as math;
 
 class TransactionNavigationPage extends StatefulWidget {
   const TransactionNavigationPage({Key? key}) : super(key: key);
@@ -114,14 +113,15 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                   }
                   if (snapshot.hasData) {
                     TransactionModel? userInfo = snapshot.data;
-                  print(userInfo!.data!.transactions!.length);
-                  if(userInfo!.data!.transactions!.length==0){
-                    return Center(child: Center(
-                      child: Scrollbar(
-                        child:  Image.asset(ImageManager.noDataFound),
-                      ),
-                    ));
-                  }
+                    print(userInfo!.data!.transactions!.length);
+                    if (userInfo!.data!.transactions!.length == 0) {
+                      return Center(
+                          child: Center(
+                        child: Scrollbar(
+                          child: Image.asset(ImageManager.noDataFound),
+                        ),
+                      ));
+                    }
                     return Column(
                       children: <Widget>[
                         Expanded(
@@ -143,7 +143,9 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                                         ),
                                       ),
                                       errorWidget: CircularProgressIndicator()),
-                                  title: Text(userInfo.data!.transactions![index].fromAccount.toString()),
+                                  title: Text(userInfo
+                                      .data!.transactions![index].fromAccount
+                                      .toString()),
                                   subtitle: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -216,7 +218,6 @@ class _TransactionNavigationPageState extends State<TransactionNavigationPage> {
                 },
               ),
             ),
-
           ],
         ),
       ),

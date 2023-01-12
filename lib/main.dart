@@ -8,12 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:we_coin/splash_screen.dart';
 import 'package:we_coin/utils/api_constant.dart';
 import 'package:we_coin/view/dashboard/navigation_pages/notification/PushNotifications.dart';
-import 'package:hive/hive.dart';
-import 'package:we_coin/view/dashboard/navigation_pages/transaction/transaction.dart';
+
 import 'data/repositry/add_tickets_repo.dart';
 import 'data/repositry/auth_repo.dart';
 import 'data/repositry/currencies_get_repo.dart';
@@ -26,7 +27,6 @@ import 'data/repositry/send_money_repo.dart';
 import 'data/repositry/settings_repo.dart';
 import 'data/repositry/view_profile_get.dart';
 import 'data/repositry/view_tickets_repo.dart';
-import 'package:path_provider/path_provider.dart';
 
 // import 'firebase_options.dart';
 
@@ -45,11 +45,11 @@ void main() {
   runZonedGuarded(() async {
     runApp(const MyApp());
     WidgetsFlutterBinding.ensureInitialized();
-    var directory= await getApplicationDocumentsDirectory();
+    var directory = await getApplicationDocumentsDirectory();
     Hive.init(directory.path);
     await Firebase.initializeApp(
-      // options: DefaultFirebaseOptions.currentPlatform,
-    );
+        // options: DefaultFirebaseOptions.currentPlatform,
+        );
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     PushNotificationService(firebaseMessaging).initialise();
   }, (dynamic error, dynamic stack) {
@@ -96,6 +96,7 @@ class MyApp extends StatelessWidget {
         },
         // child: HomePage(),
         child: SplashScreen(),
+        // child: BarChartAPI(),
       ),
     );
   }

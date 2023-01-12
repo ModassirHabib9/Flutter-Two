@@ -43,7 +43,7 @@ dependencies:
   flutter_svg_provider: ^1.0.3
   dotted_border: ^2.0.0+3
   line_chart: ^1.1.11
-  charts_flutter: ^0.11.0
+  charts_flutter: ^0.12.0
   quickalert: ^1.0.0
   getwidget: ^3.0.1
   #  flutter_chat_ui: ^1.6.6
@@ -78,6 +78,7 @@ dependencies:
   json_annotation: any
   anim_search_bar: ^2.0.3
   path: any
+
 
   syncfusion_flutter_charts: any
 

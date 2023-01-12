@@ -5,7 +5,8 @@ class WalletsModel {
   List<Data>? data;
   String? error;
 
-  WalletsModel({this.status, this.statusCode, this.message, this.data, this.error});
+  WalletsModel(
+      {this.status, this.statusCode, this.message, this.data, this.error});
 
   WalletsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -13,7 +14,9 @@ class WalletsModel {
     message = json['message'];
     if (json['data'] != null) {
       data = <Data>[];
-      json['data'].forEach((v) { data!.add(new Data.fromJson(v)); });
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
     }
     error = json['error'];
   }
@@ -36,13 +39,22 @@ class Data {
   int? userId;
   String? accountAddress;
   int? currencyId;
-  int? balance;
+  String? balance;
   String? isDefault;
   String? createdAt;
   String? updatedAt;
   Currencies? currencies;
 
-  Data({this.id, this.userId, this.accountAddress, this.currencyId, this.balance, this.isDefault, this.createdAt, this.updatedAt, this.currencies});
+  Data(
+      {this.id,
+      this.userId,
+      this.accountAddress,
+      this.currencyId,
+      this.balance,
+      this.isDefault,
+      this.createdAt,
+      this.updatedAt,
+      this.currencies});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -53,7 +65,9 @@ class Data {
     isDefault = json['is_default'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    currencies = json['currencies'] != null ? new Currencies.fromJson(json['currencies']) : null;
+    currencies = json['currencies'] != null
+        ? new Currencies.fromJson(json['currencies'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -88,39 +102,52 @@ class Currencies {
   String? createdAt;
   String? updatedAt;
 
-  Currencies({this.id, this.type, this.name, this.symbol, this.code, this.rate, this.logo, this.default2, this.exchangeFrom, this.allowAddressCreation, this.status, this.createdAt, this.updatedAt});
+  Currencies(
+      {this.id,
+      this.type,
+      this.name,
+      this.symbol,
+      this.code,
+      this.rate,
+      this.logo,
+      this.default2,
+      this.exchangeFrom,
+      this.allowAddressCreation,
+      this.status,
+      this.createdAt,
+      this.updatedAt});
 
-Currencies.fromJson(Map<String, dynamic> json) {
-id = json['id'];
-type = json['type'];
-name = json['name'];
-symbol = json['symbol'];
-code = json['code'];
-rate = json['rate'];
-logo = json['logo'];
-default2 = json['default'];
-exchangeFrom = json['exchange_from'];
-allowAddressCreation = json['allow_address_creation'];
-status = json['status'];
-createdAt = json['created_at'];
-updatedAt = json['updated_at'];
-}
+  Currencies.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    type = json['type'];
+    name = json['name'];
+    symbol = json['symbol'];
+    code = json['code'];
+    rate = json['rate'];
+    logo = json['logo'];
+    default2 = json['default'];
+    exchangeFrom = json['exchange_from'];
+    allowAddressCreation = json['allow_address_creation'];
+    status = json['status'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
 
-Map<String, dynamic> toJson() {
-  final Map<String, dynamic> data = new Map<String, dynamic>();
-  data['id'] = this.id;
-  data['type'] = this.type;
-  data['name'] = this.name;
-  data['symbol'] = this.symbol;
-  data['code'] = this.code;
-  data['rate'] = this.rate;
-  data['logo'] = this.logo;
-  data['default'] = this.default2;
-  data['exchange_from'] = this.exchangeFrom;
-  data['allow_address_creation'] = this.allowAddressCreation;
-  data['status'] = this.status;
-  data['created_at'] = this.createdAt;
-  data['updated_at'] = this.updatedAt;
-  return data;
-}
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['type'] = this.type;
+    data['name'] = this.name;
+    data['symbol'] = this.symbol;
+    data['code'] = this.code;
+    data['rate'] = this.rate;
+    data['logo'] = this.logo;
+    data['default'] = this.default2;
+    data['exchange_from'] = this.exchangeFrom;
+    data['allow_address_creation'] = this.allowAddressCreation;
+    data['status'] = this.status;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
 }
