@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:avatar_view/avatar_view.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -59,6 +60,20 @@ class _HomePageScreenState extends State<HomePageScreen> {
         SnackBar(
           content: Text('New content loaded'),
         );
+  }
+
+  List<charts.Series<HomeGraphModel, String>> _createSampleData() {
+    return [
+      charts.Series<HomeGraphModel, String>(
+        data: [],
+        id: 'data',
+        colorFn: (_, __) => charts.MaterialPalette.teal.shadeDefault,
+        domainFn: (HomeGraphModel genderModel, _) =>
+            genderModel.data!.last.country.toString(),
+        measureFn: (HomeGraphModel genderModel, _) =>
+            genderModel.data!.last.countryCount,
+      )
+    ];
   }
 
   String? accountNo;
@@ -258,29 +273,42 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       if (snapshot.hasError) {
                         return const Text('Error');
                       } else if (snapshot.hasData) {
-                        HomeGraphModel? userInfo = snapshot.data;
-                        return SfCartesianChart(
-                            plotAreaBorderWidth: 0,
-                            borderWidth: 0,
-                            primaryYAxis: CategoryAxis(isVisible: false),
-                            enableSideBySideSeriesPlacement: false,
-                            enableAxisAnimation: false,
-                            primaryXAxis: CategoryAxis(
-                              axisLine: AxisLine(width: 0),
-                              majorGridLines: MajorGridLines(width: 0),
-                            ),
-                            tooltipBehavior: _tooltip,
-                            series: <ChartSeries<HomeGraphModel, String>>[
-                              ColumnSeries<HomeGraphModel, String>(
-                                  dataSource: data1,
-                                  xValueMapper: (HomeGraphModel data, _) =>
-                                      data.data![0].country,
-                                  yValueMapper: (HomeGraphModel data, _) =>
-                                      data.data![0].countryCount,
-                                  color: Color.fromRGBO(8, 142, 255, 1))
-                            ]);
+                        // HomeGraphModel? userInfo = snapshot.data;
+                        return Container(
+                          height: 300,
+                          child: charts.BarChart(
+                            _createSampleData(),
+                            animate: true,
+                          ),
+                        );
+                        // return SfCartesianChart(
+                        //     plotAreaBorderWidth: 0,
+                        //     borderWidth: 0,
+                        //     primaryYAxis: CategoryAxis(isVisible: false),
+                        //     enableSideBySideSeriesPlacement: false,
+                        //     enableAxisAnimation: false,
+                        //     primaryXAxis: CategoryAxis(
+                        //       axisLine: AxisLine(width: 0),
+                        //       majorGridLines: MajorGridLines(width: 0),
+                        //     ),
+                        //     tooltipBehavior: _tooltip,
+                        //     series: <ChartSeries<HomeGraphModel, String>>[
+                        //       ColumnSeries(
+                        //           dataSource: data1,
+                        //           xValueMapper: (HomeGraphModel data, _) =>
+                        //               data.data![3].country,
+                        //           yValueMapper: (HomeGraphModel data, _) =>
+                        //               data.data![3].countryCount,
+                        //           color: Color.fromRGBO(8, 142, 255, 1))
+                        //     ]);
                       } else {
-                        return const Text('Empty data');
+                        return Container(
+                          height: 300,
+                          child: charts.BarChart(
+                            _createSampleData(),
+                            animate: true,
+                          ),
+                        );
                       }
                     } else {
                       return Text('State: ${snapshot.connectionState}');

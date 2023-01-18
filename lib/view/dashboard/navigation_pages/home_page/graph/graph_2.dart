@@ -4,6 +4,9 @@
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 //
+// import '../../../../../data/model/home_graph_model.dart';
+// import '../../../../../utils/api_constant.dart';
+//
 // class NetworkHelper {
 //   Future<http.Response> get(String endpoint) async {
 //     var url = Uri.parse(endpoint);
@@ -20,7 +23,8 @@
 // }
 //
 // class _BarChartAPIState extends State<BarChartAPI> {
-//   List<GenderModel> genders = [];
+//   List<HomeGraphModel> genders = [];
+//
 //   bool loading = true;
 //   NetworkHelper _networkHelper = NetworkHelper();
 //
@@ -31,8 +35,10 @@
 //   }
 //
 //   void getData() async {
-//     var response = await http.get(Uri.pa"http://wecoin.pk/weCoinApp/api/enrollment/graphData");
-//     List<GenderModel> tempdata = genderModelFromJson(response.body);
+//     var response = await http.get(Uri.parse(
+//       ApiConstants.BASE_URL + ApiConstants.GET_HOME_GRAPH,
+//     ));
+//     List<HomeGraphModel> tempdata = response.body;
 //     setState(() {
 //       genders = tempdata;
 //       loading = false;
@@ -71,6 +77,7 @@
 //     );
 //   }
 // }
+//
 // List<GenderModel> genderModelFromJson(String str) => List<GenderModel>.from(
 //     json.decode(str).map((x) => GenderModel.fromJson(x)));
 //
